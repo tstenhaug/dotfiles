@@ -70,6 +70,10 @@ is_fish_my_shell() {
     [ $(grep $USER /etc/passwd | cut -d : -f 7) = $FISH_LOCATION ] 
 }
 
+is_nvim_installed() {
+    command -v nvim
+}
+
 # extract id_rsa and id_rsa.pub from my lastpass account
 extract_ssh_keys() {
     if ! [ -d ~/.ssh ] ; then
