@@ -8,6 +8,8 @@ SETUVAR _fish_abbr_nv:nvim
 SETUVAR _fish_abbr_pss:pacman\x20\x2d\x2dsync\x20\x2d\x2dsearch
 SETUVAR _fish_abbr_sc:systemctl
 SETUVAR _fish_abbr_sps:sudo\x20pacman\x20\x2dS
+SETUVAR _fisher_jorgebucaran_2F_fisher_files:/home/thomas/\x2econfig/fish/functions/fisher\x2efish\x1e/home/thomas/\x2econfig/fish/completions/fisher\x2efish
+SETUVAR _fisher_plugins:jorgebucaran/fisher
 SETUVAR base16_theme:\x1d
 SETUVAR fish_color_autosuggestion:314549
 SETUVAR fish_color_cancel:\x2dr
