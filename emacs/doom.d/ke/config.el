@@ -529,6 +529,16 @@
         :i "C-w l" #'evil-window-right
         :i "C-w h" #'evil-window-left))
 
+;; ** tramp
+
+(after! tramp
+  (add-to-list 'tramp-methods
+               '("yadm"
+                 (tramp-login-program "yadm")
+                 (tramp-login-args (("enter")))
+                 (tramp-login-env (("SHELL") ("/bin/bash")))
+                 (tramp-remote-shell "/bin/bash")
+                 (tramp-remote-shell-args ("-c")))))
 ;; ** treemacs
 
 (after! treemacs
