@@ -1,0 +1,7 @@
+#!/usr/bin/env fish
+
+# Bootstrap the Karvus Environment
+
+cd ~
+yadm init submodules
+DOOMDIR=~/emacs/doom.d/ke emacs/emacs.d/ke-doom/bin/doom install
