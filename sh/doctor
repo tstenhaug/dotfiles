@@ -1,15 +1,18 @@
 #!/usr/bin/env zsh
 
+FISH_LOCATION="/usr/bin/fish"
 LASTPASS_LOGIN="karvus@gmail.com"
 LASTPASS_RSA_ID="2551172036"
 LASTPASS_RSA_PUB_ID="2551170726"
+REPO_HTTPS="https://github.com/tstenhaug/dotfiles.git"
+REPO_GIT="git@github.com:tstenhaug/dotfiles.git"
 
 # try to figure out which distro we're on
 determine_distro() {
     if [ -f /etc/arch-release ] ; then
         distro=arch
     else if [ -f  /etc/system-release ] && grep "CentOS Stream release 8" /etc/system-release &> /dev/null ; then
-             distro=centos_stream_8
+             distro=centos8stream
          else
              distro=unknown
          fi
@@ -24,11 +27,13 @@ set_distro_vars() {
          install_command="sudo pacman -S"
          query_command="pacman -Q"
          fish_package="fish"
+	 lastpass_package="lastpass-cli"
          ;;
-       centos8)
+       centos8stream)
            install_command="sudo dnf install"
            query_command="dnf list installed"
            fish_package="fish"
+	   lastpass_package="lastpass-cli.x86_64"
            ;;
        unknown)
            info "Unknown distro, will not be able to install packages"
@@ -61,24 +66,11 @@ is_fish_installed() {
     command -v fish &> /dev/null
 }
 
-install_fish() {
-
+is_fish_my_shell() {
+    [ $(grep $USER /etc/passwd | cut -d : -f 7) = $FISH_LOCATION ] 
 }
 
-install_lastpass() {
-    info "Trying to install lastpass"
-    case "${distro}" in
-        arch)
-            sudo pacman -S lastpass-cli
-            return $?
-            ;;
-        *)
-            echo "Don't know how to install lastpass-cli for distro ${distro}"
-            return 1
-            ;;
-    esac
-}
-
+# extract id_rsa and id_rsa.pub from my lastpass account
 extract_ssh_keys() {
     if ! [ -d ~/.ssh ] ; then
         info "~/.ssh missing, creating and chmoding"
@@ -107,7 +99,7 @@ install_package() {
     eval $install_command $package_name
 }
 
-# Main
+# main
 
 determine_distro
 set_distro_vars ${distro}
@@ -123,7 +115,7 @@ fi
 if ! is_ssh_keys_installed ; then
     info SSH-keys not installed, trying to extract with lastpass
     if ! which lpass &> /dev/null ; then
-        if install_lastpass ; then
+        if install_package ${lastpass_package} ; then
             extract_ssh_keys
         fi
     else
@@ -133,9 +125,26 @@ else
     info SSH keys already installed
 fi
 
+# if yadm repo origin is https, switch to git
+if yadm remote get-url origin | grep ${REPO_HTTPS} &> /dev/null ; then
+    info "YADM repo is tracking the HTTPS url, changing to git"
+    yadm remote set-url origin ${REPO_GIT}
+else
+    info "YADM repo is tracking the git url"
+fi
+
+
 if is_fish_installed ; then
     info "fish already installed"
 else
     info "fish not installed, trying to install"
     install_package ${fish_package}
 fi
+
+if is_fish_my_shell ; then
+    info "fish is my shell"
+else
+    info "fish is not my shell, changing"
+    chsh -s /usr/bin/fish
+fi
+
