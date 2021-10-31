@@ -1,15 +1,20 @@
 #!/usr/bin/env zsh
 
+DATA="${XDG_DATA_HOME:-$HOME/.local/share}"
+CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"
+
 FISH_LOCATION="/usr/bin/fish"
 LASTPASS_LOGIN="karvus@gmail.com"
 LASTPASS_RSA_ID="2551172036"
 LASTPASS_RSA_PUB_ID="2551170726"
 REPO_HTTPS="https://github.com/tstenhaug/dotfiles.git"
 REPO_GIT="git@github.com:tstenhaug/dotfiles.git"
+NVIM_VIM_PLUG_URL='https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+NVIM_VIM_PLUG_LOCATION="${DATA}/nvim/site/autoload/plug.vim"
 
 # try to figure out which distro we're on
 determine_distro() {
-    if [ -f /etc/arch-release ] ; then
+    if [ -e /etc/arch-release ] ; then
         distro=arch
     else if [ -f  /etc/system-release ] && grep "CentOS Stream release 8" /etc/system-release &> /dev/null ; then
              distro=centos8stream
@@ -27,13 +32,15 @@ set_distro_vars() {
          install_command="sudo pacman -S"
          query_command="pacman -Q"
          fish_package="fish"
-	 lastpass_package="lastpass-cli"
+		 neovim_package="neovim"
+         lastpass_package="lastpass-cli"
          ;;
        centos8stream)
            install_command="sudo dnf install"
            query_command="dnf list installed"
            fish_package="fish"
-	   lastpass_package="lastpass-cli.x86_64"
+		   neovim_package="neovim.x86_64"
+           lastpass_package="lastpass-cli.x86_64"
            ;;
        unknown)
            info "Unknown distro, will not be able to install packages"
@@ -55,7 +62,7 @@ error() {
 }
 
 is_ssh_keys_installed() {
-    if [ -d ~/.ssh ]  && [ -f ~/.ssh/id_rsa ] && [ -f ~/.ssh/id_rsa.pub ] ; then
+    if [ -d ~/.ssh ]  && [ -e ~/.ssh/id_rsa ] && [ -e ~/.ssh/id_rsa.pub ] ; then
         return 0
     else
         return 1
@@ -71,7 +78,7 @@ is_fish_my_shell() {
 }
 
 is_nvim_installed() {
-    command -v nvim
+    command -v nvim &> /dev/null
 }
 
 # extract id_rsa and id_rsa.pub from my lastpass account
@@ -137,7 +144,6 @@ else
     info "YADM repo is tracking the git url"
 fi
 
-
 if is_fish_installed ; then
     info "fish already installed"
 else
@@ -151,4 +157,23 @@ else
     info "fish is not my shell, changing"
     chsh -s /usr/bin/fish
 fi
+
+if is_nvim_installed ; then
+	info "Neovim is installed"
+else
+    info "Neovim is not installed, rectifying"
+	install_package ${neovim_package}
+fi
+
+if test -e "${NVIM_VIM_PLUG_LOCATION}"  ; then
+	info "Neovim: vim-plug is installed"
+else
+	info "Neovim: vim-plug is not installed, rectifying"
+	curl -fLo "${NVIM_VIM_PLUG_LOCATION}" --create-dirs "${NVIM_VIM_PLUG_URL}" 
+fi
+
+info "Neovim: installing plugins"
+nvim --headless -c PlugInstall -c q! -c q! 2> /dev/null
+
+
 
