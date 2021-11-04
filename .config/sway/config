@@ -1,0 +1,40 @@
+# -*- Mode: i3wm-config -*-
+# Sway config for KE2
+
+# Set some up basic defaults
+
+set $mod Mod4
+
+floating_modifier $mod
+set $opacity 0.9
+set $term alacritty
+font pango:DejaVu Sans 12
+
+bindsym Alt_L+t exec alacritty
+
+# support for X11 apps
+xwayland enable
+
+# TODO figure out which windows I want opacity for
+for_window [class=".*macs"] opacity $opacity
+
+default_border none
+
+smart_gaps on
+gaps inner 5
+gaps outer 0
+
+exec --no-startup-id xrdb ~/.Xresources
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+
+input "type:keyboard" {
+  xkb_layout us
+  xkb_variant mac
+  xkb_options ctrl:swapcaps
+}
+
+bar {
+    swaybar_command waybar
+}
+
+include /home/thomas/.config/sway/conf.d/*
