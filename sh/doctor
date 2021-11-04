@@ -16,8 +16,8 @@ NVIM_VIM_PLUG_LOCATION="${DATA}/nvim/site/autoload/plug.vim"
 determine_distro() {
     if [ -e /etc/arch-release ] ; then
         distro=arch
-    else if [ -f  /etc/system-release ] && grep "CentOS Stream release 8" /etc/system-release &> /dev/null ; then
-             distro=centos8stream
+    else if [ -f  /etc/system-release ] && egrep "CentOS|Fedora" /etc/system-release &> /dev/null ; then
+             distro=rhel_like
          else
              distro=unknown
          fi
@@ -35,7 +35,7 @@ set_distro_vars() {
 		 neovim_package="neovim"
          lastpass_package="lastpass-cli"
          ;;
-       centos8stream)
+       rhel_like) 
            install_command="sudo dnf install"
            query_command="dnf list installed"
            fish_package="fish"
