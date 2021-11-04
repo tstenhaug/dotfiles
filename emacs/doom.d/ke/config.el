@@ -588,32 +588,6 @@
          "n" #'+snippets/new
          "p" #'+snippets/find-private)))
 
-;; ** xah-math-input
-
-;; Some of the entries in Xah's table is causing problems for me,
-;; leaving unintentional unicode characters in the file, that LaTeX
-;; chokes on.  This is a list of them.
-;; (defvar ke/xah-math-input-disabled-entries
-;;   '(":" "A" "B" "C" "D" "E" "F" "G" "H" "I""J" "K" "L" "M" "N" "O" "P" "Q" "R" "S"
-;;     "T" "U" "V" "X" "Y" "Z"))
-
-;; (use-package! xah-math-input
-;;   :config
-;;   (xah-math-input--add-to-hash '(["||" "‖"]
-;;                                  ["|/" "∤"]
-;;                                  ["circ" "∘"] ; this overrides the default of circumflex
-;;                                  ["cdot" "·"]
-;;                                  ["xr" "⊕"]
-;;                                  ["check" "✓"]
-;;                                  ["cntrd" "↯"] ; contradiction
-;;                                  ["udArr" "⇳"]
-;;                                  ["//" "÷"]
-;;                                  ))
-;;   ;; these causes problems when I accidentally input them
-;;   (dolist (entry ke/xah-math-input-disabled-entries)
-;;     (remhash entry xah-math-input-abrvs))
-;;   (global-xah-math-input-mode 1))
-
 ;; custom functionality
 
 (defun ke/iso-date ()
