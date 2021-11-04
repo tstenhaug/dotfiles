@@ -143,23 +143,23 @@
 
 ;; ** calendar
 
-(use-package! calendar
-  :config
-  (copy-face font-lock-constant-face 'calendar-iso-week-face)
-  (set-face-attribute 'calendar-iso-week-face nil
-                      :height 0.5)
-  (calendar-set-date-style 'iso)        ; YYYY-MM-DD
-  (setq calendar-week-start-day 1)      ; monday
-  ;; display ISO week number
-  (setq calendar-intermonth-text
-        '(propertize
-          (format "%2d"
-                  (car
-                   (calendar-iso-from-absolute
-                    (calendar-absolute-from-gregorian (list month day year)))))
-          'font-lock-face 'calendar-iso-week-face))
-  (evil-define-key 'normal calendar-mode-map
-    "p" 'calendar-iso-print-date))
+;; (use-package! calendar
+;;   :config
+;;   (copy-face font-lock-constant-face 'calendar-iso-week-face)
+;;   (set-face-attribute 'calendar-iso-week-face nil
+;;                       :height 0.5)
+;;   (calendar-set-date-style 'iso)        ; YYYY-MM-DD
+;;   (setq calendar-week-start-day 1)      ; monday
+;;   ;; display ISO week number
+;;   (setq calendar-intermonth-text
+;;         '(propertize
+;;           (format "%2d"
+;;                   (car
+;;                    (calendar-iso-from-absolute
+;;                     (calendar-absolute-from-gregorian (list month day year)))))
+;;           'font-lock-face calendar-iso-week-face))
+;;   (evil-define-key 'normal 'calendar-mode-map
+;;     "p" 'calendar-iso-print-date))
 
 ;; ** auctex
 
