@@ -1,0 +1,6 @@
+[Unit]
+Description=Backup %h/df to rsync.net:/backup/daily/df
+
+[Service]
+Type=exec
+ExecStart=rsync -a --delete -e "ssh -i /home/thomas/.ssh/id_rsa_backup" %h/df zh1885@zh1885.rsync.net:backup/daily

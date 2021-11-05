@@ -1,0 +1,10 @@
+[Unit]
+Description=Weekly backup of $h/df
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+
