@@ -558,8 +558,8 @@
                #'treemacs-is-file-git-ignored?)
   (setq doom-themes-treemacs-theme "doom-atom"))
 
-
 ;; ** vterm
+
 (after! vterm
   (map! :map vterm-mode-map
         :i "C-w" nil)
