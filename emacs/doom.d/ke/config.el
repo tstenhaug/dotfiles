@@ -450,6 +450,11 @@
   (setq org-journal-date-format "%A, %F")
   (setq org-journal-file-type 'weekly))
 
+;; ** org-roam
+;;
+(after! org-roam
+  (setq org-roam-directory "~/df/roam"))
+
 ;; ** outshine
 
 (use-package! outshine
