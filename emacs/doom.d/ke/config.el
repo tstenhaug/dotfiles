@@ -21,12 +21,13 @@
 (setq doom-font (pcase (system-name)
                   ("lade" (font-spec :family "DejaVu Sans Mono" :size 28))
                   ("pir" (font-spec :family "JetBrains Mono Nerd Font" :size 16))
+                  ("pir-fedora" (font-spec :family "JetBrains Mono" :size 16))
                   (_ (font-spec :family "DejaVu Sans Mono" :size 24))))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. These are the defaults.
-(setq doom-theme 'doom-material)
+(setq doom-theme 'doom-nord)
 
 ;; If you intend to use org, it is recommended you change this!
 (setq org-directory "~/df/org")

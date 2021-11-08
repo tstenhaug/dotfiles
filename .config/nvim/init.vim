@@ -16,21 +16,33 @@ nnoremap <Leader>hr :source $MYVIMRC<CR>
 nnoremap <Leader>hp :PlugInstall<CR>
 nnoremap <Leader>qq :q!<CR>
 
-" Specify a directory for plugins
-" - For Neovim: stdpath('data') . '/plugged'
-" - Avoid using standard Vim directory names like 'plugin'
-
+let CursorColumnI = 0 "the cursor column position in INSERT
+autocmd InsertEnter * let CursorColumnI = col('.')
+autocmd CursorMovedI * let CursorColumnI = col('.')
+autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) | endif
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'terminalnode/sway-vim-syntax'
 Plug 'tpope/vim-surround'
 Plug 'preservim/nerdtree'
 Plug 'plasticboy/vim-markdown'
 Plug 'joshdick/onedark.vim'
-Plug 'itchyny/lightline.vim'
+Plug 'marko-cerovac/material.nvim'
+Plug 'shaunsingh/nord.nvim'
+Plug 'nvim-lualine/lualine.nvim'
 call plug#end()
 
-let g:lightline = {
- \ 'colorscheme': 'onedark',
- \ }
+lua << EOF
+require('lualine').setup {
+  options = {
+    -- ... your lualine config
+    theme = 'nord'
+    -- ... your lualine config
+  }
+}
+EOF
 
-colorscheme onedark
+"let g:lightline = {
+" \ 'colorscheme': 'onedark',
+" \ }
+
+colorscheme nord

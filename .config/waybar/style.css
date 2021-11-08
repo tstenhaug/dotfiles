@@ -12,6 +12,8 @@
  * Keyframes
  * -------------------------------------------------------------------------- */
 
+@define-color bg #2E3440;
+
 @keyframes blink-warning {
   70% {
     color: @wm_icon_bg;
@@ -50,7 +52,8 @@
 
 /* The whole bar */
 #waybar {
-  background: @theme_bg_color;
+/*  background: @bg; */
+	background: transparent;
   color: @wm_icon_bg;
   font-size: 14px;
 }
@@ -163,6 +166,7 @@
 }
 
 #window {
+  background: transparent;
   font-weight: bold;
   margin-right: 25px;
   color: @theme_selected_bg_color;
