@@ -6,26 +6,24 @@
 set $mod Mod4
 
 floating_modifier $mod
-set $opacity 0.9
-set $term alacritty
+set $opacity 0.8
+set $term kitty
+set $wallpaper "~/df/img/wallpapers/nord-theme-abstract-mountain-2.png"
+set $notifications mako
+set $polkit "/usr/libexec/kf5/polkit-kde-authentication-agent-1"
 font pango:DejaVu Sans 12
-
-bindsym Alt_L+t exec alacritty
 
 # support for X11 apps
 xwayland enable
 
-# TODO figure out which windows I want opacity for
-for_window [class=".*macs"] opacity $opacity
-
+# keep it minimal
 default_border none
 
 smart_gaps on
-gaps inner 5
+gaps inner 10
 gaps outer 0
 
 exec --no-startup-id xrdb ~/.Xresources
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 
 input "type:keyboard" {
   xkb_layout us
