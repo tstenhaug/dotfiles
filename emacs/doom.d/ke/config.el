@@ -209,6 +209,11 @@
 (after! deft
   (setq deft-directory "~/df/notes"))
 
+;; ** evil
+
+(after! evil
+  (setq evil-move-cursor-back nil))
+
 ;; ** evil-org
 
 (after! evil-org
