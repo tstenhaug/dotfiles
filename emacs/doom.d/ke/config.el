@@ -59,6 +59,7 @@
 (setq max-specpdl-size 13000)
 (setq +evil-want-o/O-to-continue-comments nil)
 (setq large-file-warning-threshold (* 1024 1024 100))
+(setq select-enable-primary t)
 
 ;; * Global keybinds
 (setq doom-localleader-key ",")
