@@ -18,7 +18,35 @@
  '(rustic-ansi-faces
    ["#1e1e1e" "#D16969" "#579C4C" "#D7BA7D" "#339CDB" "#C586C0" "#85DDFF" "#d4d4d4"])
  '(safe-local-variable-values
-   '((flycheck-mode)
+   '((eval when
+           (and
+            (buffer-file-name)
+            (not
+             (file-directory-p
+              (buffer-file-name)))
+            (string-match-p "^[^.]"
+                            (buffer-file-name)))
+           (unless
+               (featurep 'package-build)
+             (let
+                 ((load-path
+                   (cons "../package-build" load-path)))
+               (require 'package-build)))
+           (unless
+               (derived-mode-p 'emacs-lisp-mode)
+             (emacs-lisp-mode))
+           (package-build-minor-mode)
+           (setq-local flycheck-checkers nil)
+           (set
+            (make-local-variable 'package-build-working-dir)
+            (expand-file-name "../working/"))
+           (set
+            (make-local-variable 'package-build-archive-dir)
+            (expand-file-name "../packages/"))
+           (set
+            (make-local-variable 'package-build-recipes-dir)
+            default-directory))
+     (flycheck-mode)
      (flyspell-mode)
      (org-confirm-babel-evaluate)
      (org-imenu-depth . 3)))
