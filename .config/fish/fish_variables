@@ -2,15 +2,32 @@
 # VERSION: 3.0
 SETUVAR --export DOOMDIR:/home/thomas/\x2edoom\x2ed
 SETUVAR --export EDITOR:nvim
+SETUVAR TO_DIR:/home/thomas/\x2etofish
 SETUVAR __fish_initialized:3100
+SETUVAR _fish_abbr_cdcm:cd\x20\x28chezmoi\x20source\x2dpath\x29
+SETUVAR _fish_abbr_cm:chezmoi
+SETUVAR _fish_abbr_cma:chezmoi\x20apply
+SETUVAR _fish_abbr_cmcd:cd\x20\x28chezmoi\x20source\x2dpath\x29
+SETUVAR _fish_abbr_cmd:chezmoi\x20diff
+SETUVAR _fish_abbr_cmr:chezmoi\x20re\x2dadd
+SETUVAR _fish_abbr_cms:chezmoi\x20status
+SETUVAR _fish_abbr_ds:dnf\x20search
+SETUVAR _fish_abbr_gcm:git\x20commit\x20\x2dm
+SETUVAR _fish_abbr_gs:git\x20status
 SETUVAR _fish_abbr_jc:journalctl
+SETUVAR _fish_abbr_n:nvim
 SETUVAR _fish_abbr_nv:nvim
 SETUVAR _fish_abbr_pss:pacman\x20\x2d\x2dsync\x20\x2d\x2dsearch
 SETUVAR _fish_abbr_sc:systemctl
+SETUVAR _fish_abbr_sdi:sudo\x20dnf\x20install
+SETUVAR _fish_abbr_skt:select\x2dkitty\x2dtheme
 SETUVAR _fish_abbr_sps:sudo\x20pacman\x20\x2dS
+SETUVAR _fisher_decors_2F_fish_2D_colored_2D_man_files:/home/thomas/\x2econfig/fish/functions/man\x2efish
+SETUVAR _fisher_joehillen_2F_to_2D_fish_files:/home/thomas/\x2econfig/fish/functions/to\x2efish\x1e/home/thomas/\x2econfig/fish/conf\x2ed/to\x2efish\x1e/home/thomas/\x2econfig/fish/completions/to\x2efish
 SETUVAR _fisher_jorgebucaran_2F_fisher_files:/home/thomas/\x2econfig/fish/functions/fisher\x2efish\x1e/home/thomas/\x2econfig/fish/completions/fisher\x2efish
-SETUVAR _fisher_plugins:jorgebucaran/fisher
+SETUVAR _fisher_plugins:jorgebucaran/fisher\x1ejoehillen/to\x2dfish\x1edecors/fish\x2dcolored\x2dman
 SETUVAR base16_theme:\x1d
+SETUVAR cm:/home/thomas/\x2elocal/share/chezmoi
 SETUVAR fish_color_autosuggestion:314549
 SETUVAR fish_color_cancel:\x2dr
 SETUVAR fish_color_command:green
@@ -40,5 +57,5 @@ SETUVAR fish_pager_color_completion:normal
 SETUVAR fish_pager_color_description:yellow\x1e\x2d\x2ddim
 SETUVAR fish_pager_color_prefix:white\x1e\x2d\x2dbold
 SETUVAR fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
-SETUVAR fish_user_paths:/home/thomas/sh\x1e/home/thomas/\x2eemacs\x2ed/bin\x1e/home/thomas/\x2eemacs\x2ed\x1e/home/thomas/ke/sh\x1e/home/thomas/\x2efzf/bin
+SETUVAR fish_user_paths:/home/thomas/\x2elocal/bin\x1e/home/thomas/sh\x1e/home/thomas/\x2eemacs\x2ed/bin\x1e/home/thomas/\x2eemacs\x2ed\x1e/home/thomas/ke/sh\x1e/home/thomas/\x2efzf/bin
 SETUVAR rn:zh1885\x40zh1885\x2ersync\x2enet

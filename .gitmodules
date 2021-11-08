@@ -1,6 +1,0 @@
-[submodule "emacs/emacs.d/ke-doom"]
-	path = emacs/emacs.d/ke-doom
-	url = https://github.com/hlissner/doom-emacs
-[submodule "emacs/emacs.d/chemacs2"]
-	path = emacs/emacs.d/chemacs2
-	url = https://github.com/plexus/chemacs2
