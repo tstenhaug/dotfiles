@@ -1,0 +1,78 @@
+{
+    "default_server_config": {
+        "m.homeserver": {
+            "base_url": "https://matrix-client.matrix.org",
+            "server_name": "matrix.org"
+        },
+        "m.identity_server": {
+            "base_url": "https://vector.im"
+        }
+    },
+    "disable_custom_urls": false,
+    "disable_guests": false,
+    "disable_login_language_selector": false,
+    "disable_3pid_login": false,
+    "brand": "Element",
+    "integrations_ui_url": "https://scalar.vector.im/",
+    "integrations_rest_url": "https://scalar.vector.im/api",
+    "integrations_widgets_urls": [
+        "https://scalar.vector.im/_matrix/integrations/v1",
+        "https://scalar.vector.im/api",
+        "https://scalar-staging.vector.im/_matrix/integrations/v1",
+        "https://scalar-staging.vector.im/api",
+        "https://scalar-staging.riot.im/scalar/api"
+    ],
+    "bug_report_endpoint_url": "https://element.io/bugreports/submit",
+    "defaultCountryCode": "GB",
+    "showLabsSettings": false,
+    "features": { },
+    "default_federate": true,
+    "default_theme": "custom-Nord",
+    "roomDirectory": {
+        "servers": [
+            "matrix.org"
+        ]
+    },
+    "piwik": {
+        "url": "https://piwik.riot.im/",
+        "whitelistedHSUrls": ["https://matrix.org"],
+        "whitelistedISUrls": ["https://vector.im", "https://matrix.org"],
+        "siteId": 1
+    },
+    "enable_presence_by_hs_url": {
+        "https://matrix.org": false,
+        "https://matrix-client.matrix.org": false
+    },
+    "settingDefaults": {
+        "breadcrumbs": true,
+        "custom_themes": [
+{
+    "name": "Nord dark theme",
+    "is_dark": true,
+    "colors": {
+        "accent-color": "#a3be8c",
+        "primary-color": "#88c0d0",
+        "warning-color": "#bf616a",
+
+        "sidebar-color": "#2e3440",
+        "roomlist-background-color": "#3b4252",
+        "roomlist-text-color": "#ebcb8b",
+        "roomlist-text-secondary-color": "#e5e9f0",
+        "roomlist-highlights-color": "#2e3440",
+        "roomlist-separator-color": "#434c5e",
+
+        "timeline-background-color": "#434c5e",
+        "timeline-text-color": "#eceff4",
+        "secondary-content": "#eceff4",
+        "tertiary-content": "#eceff4",
+        "timeline-text-secondary-color": "#81a1c1",
+        "timeline-highlights-color": "#3b4252",
+        "reaction-row-button-selected-bg-color": "#bf616a"
+    }
+}
+        ]
+    },
+    "jitsi": {
+        "preferredDomain": "jitsi.riot.im"
+    }
+}
