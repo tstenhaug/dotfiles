@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=Element (NVidia)
+Comment=Element is a decentralized, secure messaging client for collaborative group communication.
+GenericName=Group Messaging
+Exec=io.element.element.wrapper.sh --use-gl=egl %U
+Terminal=false
+Type=Application
+Categories=Network;InstantMessaging;Chat;VideoConference;X-E2EE;
+MimeType=x-scheme-handler/element;
+StartupWMClass=Element
+StartupNotify=true
+Icon=io.element.element
+
+# .desktop spec:
+#   the spec: https://www.freedesktop.org/wiki/Specifications/desktop-entry-spec/
+#   Categories: https://specifications.freedesktop.org/menu-spec/latest/apa.html
+# .metainfo.xml spec: https://www.freedesktop.org/software/appstream/docs/
+
