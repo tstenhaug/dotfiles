@@ -1,0 +1,4 @@
+#!/bin/sh 
+
+echo "submodule init"
+yadm submodule update --recursive --init
