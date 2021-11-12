@@ -2,6 +2,7 @@
 # VERSION: 3.0
 SETUVAR --export DOOMDIR:/home/thomas/\x2edoom\x2ed
 SETUVAR --export EDITOR:nvim
+SETUVAR --export LIBVIRT_DEFAULT_URI:qemu\x3a///system
 SETUVAR TO_DIR:/home/thomas/\x2etofish
 SETUVAR __fish_initialized:3100
 SETUVAR _fish_abbr_cdcm:cd\x20\x28chezmoi\x20source\x2dpath\x29
@@ -12,6 +13,7 @@ SETUVAR _fish_abbr_cmd:chezmoi\x20diff
 SETUVAR _fish_abbr_cmr:chezmoi\x20re\x2dadd
 SETUVAR _fish_abbr_cms:chezmoi\x20status
 SETUVAR _fish_abbr_ds:dnf\x20search
+SETUVAR _fish_abbr_e:emacsclient
 SETUVAR _fish_abbr_gcm:git\x20commit\x20\x2dm
 SETUVAR _fish_abbr_gs:git\x20status
 SETUVAR _fish_abbr_jc:journalctl
