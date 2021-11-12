@@ -55,7 +55,7 @@
 ;; work correctly.
 
 (package! graphviz-dot-mode)
-(package! org-download :pin "a367669384859261bcb11bac4b782f231f972353")
+;; (package! org-download :pin "a367669384859261bcb11bac4b782f231f972353")
 (package! outshine)
 (package! ox-reveal)
 (package! lorem-ipsum)

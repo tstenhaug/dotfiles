@@ -61,6 +61,7 @@
 (setq large-file-warning-threshold (* 1024 1024 100))
 (setq select-enable-primary t)
 
+
 ;; * Global keybinds
 (setq doom-localleader-key ",")
 ;; (map! "M-s" 'swiper)
@@ -435,16 +436,16 @@
 ;; "[[attach:...]]" links instead of "[[file:...]]" links, which is not what I
 ;; want.  Look back at this later.
 
-(use-package! org-download
-  :config
-  (setq org-download-screenshot-method "xclip -selection clipboard -t image/png -o > %s")
-  (setq org-download-method 'attach)
-  (setq org-download-link-format-function #'ke-org-download-link-format))
+;; (use-package! org-download
+;;   :config
+;;   (setq org-download-screenshot-method "xclip -selection clipboard -t image/png -o > %s")
+;;   (setq org-download-method 'attach)
+;;   (setq org-download-link-format-function #'ke-org-download-link-format))
 
-(defun ke-org-download-link-format (filename)
-  (format org-download-link-format
-          (org-link-escape
-           (funcall org-download-abbreviate-filename-function filename))))
+;; (defun ke-org-download-link-format (filename)
+;;   (format org-download-link-format
+;;           (org-link-escape
+;;            (funcall org-download-abbreviate-filename-function filename))))
 
 
 (use-package! org-noter)
