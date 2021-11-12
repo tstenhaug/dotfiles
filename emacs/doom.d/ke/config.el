@@ -352,6 +352,7 @@
   (setq org-list-allow-alphabetical t)
   (setq org-pretty-entities t)
   (setq org-preview-latex-default-process 'dvisvgm)
+  (setq org-startup-folded t)
   (setq org-use-sub-superscripts t))
 
 (defun ke-org-init-keybinds-h ()
