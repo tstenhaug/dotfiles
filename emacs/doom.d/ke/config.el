@@ -207,7 +207,7 @@
            (apply orig args)))))))
 
 (after! deft
-  (setq deft-directory "~/df/notes"))
+  (setq deft-directory "~/df/roam"))
 
 ;; ** evil
 
