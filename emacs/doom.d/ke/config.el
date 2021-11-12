@@ -308,7 +308,11 @@
   (map! :leader
         :desc "Lipsum paragraph" "i l" #'lorem-ipsum-insert-paragraphs))
 
+;; ** ol-* (org link)
 ;; ** org-mode
+
+(use-package! ol-man
+  :after ol)
 
 ;; This is the default setting -- Doom sets it to 0. Might like that, so I'm
 ;; keeping this for posterity.
