@@ -1,0 +1,41 @@
+#!/usr/bin/env zsh
+
+# Append ~/.ssh/id_rsa.pub to a remote host's authorized_keys
+
+if [ "$1" = "" ] ; then
+    echo "Usage: $0 <host>"
+fi
+
+remote_host="$1"
+
+pubkey_file=~/.ssh/id_rsa.pub
+
+if [ ! -f $pubkey_file ] ; then
+    echo "$pubkey_file doesn't exist"
+    exit 1
+fi
+
+pubkey=$(cat ~/.ssh/id_rsa.pub)
+
+echo "I am about to append the following key to the authorized_keys of $remote_host."
+echo
+echo $pubkey
+echo
+echo -n "Proceed? (y/N)"
+read -q ans
+if [ "$ans" != "y" ] ; then
+    exit 0
+fi
+
+script=$(
+    cat <<EOF
+if [ ! -d ~/.ssh ] ; then
+   mkdir ~/.ssh ;
+   chmod 700 ~/.ssh ;
+fi ;
+echo $pubkey >> ~/.ssh/authorized_keys ;
+chmod 600 ~/.ssh/authorized_keys
+EOF
+      )
+
+ssh ${remote_host:?} "$script"
