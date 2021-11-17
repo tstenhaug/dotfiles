@@ -1,1 +1,9 @@
-../../yadm/alt/.config/systemd/user/backup-daily.timer##h.rosten
+[Unit]
+Description=Daily backup of $h/df 
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target

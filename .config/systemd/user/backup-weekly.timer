@@ -1,1 +1,10 @@
-../../yadm/alt/.config/systemd/user/backup-weekly.timer##h.rosten
+[Unit]
+Description=Weekly backup of $h/df
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+
