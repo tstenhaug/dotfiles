@@ -638,6 +638,11 @@
   (interactive)
   (insert (format-time-string "%H:%M" (current-time))))
 
+(defun ke/yadm ()
+  "Open magit-status inside a YADM session."
+  (interactive)
+  (magit-status "/yadm::"))
+
 (map! :leader
       :prefix "i"
       :desc "ISO-date" "d" #'ke/insert-iso-date
