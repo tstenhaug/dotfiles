@@ -19,9 +19,8 @@
 ;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 22))
 (setq doom-font (pcase (system-name)
-                  ("lade" (font-spec :family "DejaVu Sans Mono" :size 28))
-                  ("pir" (font-spec :family "JetBrains Mono Nerd Font" :size 16))
-                  ("pir-fedora" (font-spec :family "JetBrains Mono" :size 16))
+                  ("korhal" (font-spec :family "DejaVu Sans Mono" :size 28))
+                  ("shakuras" (font-spec :family "JetBrains Mono" :size 16))
                   (_ (font-spec :family "DejaVu Sans Mono" :size 24))))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
