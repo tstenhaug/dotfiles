@@ -1,1 +1,1 @@
-../backup-weekly.timer
+/home/thomas/.config/systemd/user/backup-weekly.timer
