@@ -334,11 +334,7 @@
              '(priority-down time-down todo-state-down
                              effort-up category-keep))))
           ("l" agenda*)
-          ("d" . "Various todos")
-          ("dt" todo)
-          ("g" "Agenda sans drill"
-           ((agenda))
-           ((org-agenda-tag-filter-preset '("-drill"))))
+          ("d" "Today-todos" tags-todo "today")
           ))
   (setq org-attach-id-dir "org-attach/")
   (when IS-LINUX
