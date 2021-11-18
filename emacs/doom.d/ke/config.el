@@ -173,6 +173,7 @@
 
 ;; ** deft
 
+
 (defun ke-deft-strip-quotes (str)
   (cond ((string-match "\"\\(.+\\)\"" str) (match-string 1 str))
         ((string-match "'\\(.+\\)'" str) (match-string 1 str))
@@ -207,7 +208,38 @@
            (apply orig args)))))))
 
 (after! deft
-  (setq deft-directory "~/df/roam"))
+  (setq deft-directory "~/df/roam")
+  (setq deft-recursive t)
+  (setq deft-strip-summary-regexp
+        (concat "\\("
+                "^:.+:.*\n" ; any line with a :SOMETHING:
+                "\\|^#\\+.*\n" ; anyline starting with a #+
+;;                "\\|^\\*.+.*\n" ; anyline where an asterisk starts the line
+                "\\)")))
+
+
+(setq deft-strip-summary-regexp
+      (concat "\\("
+              "[\n\t]" ;; blank
+              "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
+              "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:.*$"
+              "\\)"))
+
+(setq deft-strip-summary-regexp "\\([
+        ]\\|^#\\+[[:upper:]_]+:.*$\\)")
+
+(advice-add 'deft-parse-title :override
+            (lambda (file contents)
+              (if deft-use-filename-as-title
+                  (deft-base-filename file)
+                (let* ((case-fold-search 't)
+                       (begin (string-match "#\\+title: " contents))
+                       (end-of-begin (match-end 0))
+                       (end (string-match "\n" contents begin)))
+                  (if begin
+                      (substring contents end-of-begin end)
+                    (format "%s" file))))))
+
 
 ;; ** evil
 
