@@ -79,7 +79,6 @@ install_package() {
     fi
     if ! eval $install_command $package_name ; then
         error "Couldn't install $package_name"
-        exit 1
     fi
 }
 
@@ -117,12 +116,10 @@ set_distro_vars ${distro}
 
 if ! command -v git &> /dev/null ; then
     error "git not installed"
-    exit 1
 fi
 
 if ! command -v ssh &> /dev/null ; then
     error "ssh not installed"
-    exit 1
 fi
 
 info "submodule init"
