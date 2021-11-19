@@ -1,0 +1,8 @@
+abbr e="emacsclient"
+abbr gcm="git commit -m "
+abbr jc="journalctl"
+abbr n="nvim"
+abbr sc="systemctl"
+abbr sdi="sudo dnf install"
+abbr skt="select-kitty-theme"
+abbr sps="sudo pacman -S"
