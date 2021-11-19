@@ -5,7 +5,7 @@ import platform
 import sys
 import subprocess
 
-if platform.os() !="Linux":
+if platform.system() !="Linux":
    sys.exit("doctor currently only works on Linux systems")
 
 
