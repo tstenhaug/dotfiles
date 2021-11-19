@@ -41,6 +41,7 @@ set_distro_vars() {
          query_command="pacman -Q"
          python_command="python"
          python_package="python"
+         pip_command="pip"
          zsh_package="zsh"
          ;;
        centos)
@@ -48,6 +49,7 @@ set_distro_vars() {
            query_command="dnf list installed"
            python_command="python3"
            python_package="python39"
+           pip_command="pip3"
            zsh_package="zsh"
            ;;
        fedora)
@@ -55,6 +57,7 @@ set_distro_vars() {
            query_command="dnf list installed"
            python_command="python3"
            python_package="python3"
+           pip_command="pip3"
            zsh_package="zsh"
            ;;
        unknown)
