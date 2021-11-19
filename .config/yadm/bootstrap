@@ -84,11 +84,25 @@ install_package() {
 }
 
 is_python_installed() {
-    command -v $python_command &> /dev/null
+    info "checking if python is installed"
+    if command -v python &> /dev/null ; then
+        info "  yes"
+        return 0
+    else
+        info "  no"
+        return 1
+    fi
 }
 
 is_zsh_installed() {
-    command -v zsh &> /dev/null
+    info "checking if zsh is installed"
+    if command -v zsh &> /dev/null ; then
+        info "  yes"
+        return 0
+    else
+        info "  no"
+        return 1
+    fi
 }
 
 # ensure_pip_module <module>
