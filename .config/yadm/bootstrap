@@ -77,7 +77,10 @@ install_package() {
     if [ "${package_name}" = "" ] ; then
         error "$0: no package name supplied"
     fi
-    eval $install_command $package_name
+    if ! eval $install_command $package_name ; then
+        error "Couldn't install $package_name"
+        exit 1
+    fi
 }
 
 is_python_installed() {
@@ -112,6 +115,7 @@ info "submodule init"
 ~/bin/yadm submodule update --recursive --init
 
 if ! is_python_installed ; then
+    info "Python not installed, rectifying"
     install_package python
 fi
 
