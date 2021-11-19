@@ -4,14 +4,10 @@ import os
 import platform
 import sys
 import subprocess
+import xdg
 
 if platform.system() !="Linux":
    sys.exit("doctor currently only works on Linux systems")
-
-
-
-DATA="${XDG_DATA_HOME:-$HOME/.local/share}"
-CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"
 
 zsh_location = '/usr/bin/zsh'
 lastpass_login = 'karvus@gmail.com'
@@ -20,7 +16,7 @@ lastpass_rsa_pub_id = '2551170726'
 repo_https = 'https://github.com/tstenhaug/dotfiles.git'
 repo_git = 'git@github.com:tstenhaug/dotfiles.git'
 nvim_vim_plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-nvim_vim_plug_location = f'{data}/nvim/site/autoload/plug.vim'
+nvim_vim_plug_location = f'{xdg.xdg_data_home()}/nvim/site/autoload/plug.vim'
 
 # # try to figure out which distro we're on
 # determine_distro() {
