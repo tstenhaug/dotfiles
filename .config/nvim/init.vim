@@ -10,6 +10,8 @@ set textwidth=78
 let mapleader = "\<Space>"
 
 nnoremap <Leader>fs :w<CR>
+nnoremap <Leader>fp :e $MYVIMRC<CR>
+nnoremap <Leader>qq :wq<CR>
 nnoremap <Leader>bk :bd<CR>
 nnoremap <Leader>op :NERDTree<CR>
 nnoremap <Leader>hr :source $MYVIMRC<CR>
@@ -23,6 +25,7 @@ autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) 
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'terminalnode/sway-vim-syntax'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
 Plug 'preservim/nerdtree'
 Plug 'plasticboy/vim-markdown'
 Plug 'joshdick/onedark.vim'
