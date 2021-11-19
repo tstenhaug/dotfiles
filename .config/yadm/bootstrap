@@ -107,8 +107,8 @@ is_zsh_installed() {
 
 # ensure_pip_module <module>
 ensure_pip_module() {
-    if ! $python -c "import $1" &> /dev/null ; then
-        $pip_command install --user module
+    if ! ${python_command:?} -c "import $1" &> /dev/null ; then
+        $pip_command install --user $1
     fi
 }
 
