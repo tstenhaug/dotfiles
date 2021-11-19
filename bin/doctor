@@ -1,179 +1,189 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env python3
+
+import os
+import platform
+import sys
+import subprocess
+
+if platform.os() !="Linux":
+   sys.exit("doctor currently only works on Linux systems")
+
+
 
 DATA="${XDG_DATA_HOME:-$HOME/.local/share}"
 CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"
 
-FISH_LOCATION="/usr/bin/fish"
-LASTPASS_LOGIN="karvus@gmail.com"
-LASTPASS_RSA_ID="2551172036"
-LASTPASS_RSA_PUB_ID="2551170726"
-REPO_HTTPS="https://github.com/tstenhaug/dotfiles.git"
-REPO_GIT="git@github.com:tstenhaug/dotfiles.git"
-NVIM_VIM_PLUG_URL='https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-NVIM_VIM_PLUG_LOCATION="${DATA}/nvim/site/autoload/plug.vim"
+zsh_location = '/usr/bin/zsh'
+lastpass_login = 'karvus@gmail.com'
+lastpass_rsa_id = '2551172036'
+lastpass_rsa_pub_id = '2551170726'
+repo_https = 'https://github.com/tstenhaug/dotfiles.git'
+repo_git = 'git@github.com:tstenhaug/dotfiles.git'
+nvim_vim_plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+nvim_vim_plug_location = f'{data}/nvim/site/autoload/plug.vim'
 
-# try to figure out which distro we're on
-determine_distro() {
-    if [ -e /etc/arch-release ] ; then
-        distro=arch
-    else if [ -f  /etc/system-release ] && egrep "CentOS|Fedora" /etc/system-release &> /dev/null ; then
-             distro=rhel_like
-         else
-             distro=unknown
-         fi
-    fi
-    info "Determined distro: ${distro}"
-}
+# # try to figure out which distro we're on
+# determine_distro() {
+#     if [ -e /etc/arch-release ] ; then
+#         distro=arch
+#     else if [ -f  /etc/system-release ] && egrep "CentOS|Fedora" /etc/system-release &> /dev/null ; then
+#              distro=rhel_like
+#          else
+#              distro=unknown
+#          fi
+#     fi
+#     info "Determined distro: ${distro}"
+# }
 
-# set_distro_vars <distro>
-set_distro_vars() {
-    case "$1" in
-       arch)
-         install_command="sudo pacman -S"
-         query_command="pacman -Q"
-         fish_package="fish"
-		 neovim_package="neovim"
-         lastpass_package="lastpass-cli"
-         ;;
-       rhel_like) 
-           install_command="sudo dnf install"
-           query_command="dnf list installed"
-           fish_package="fish"
-		   neovim_package="neovim.x86_64"
-           lastpass_package="lastpass-cli.x86_64"
-           ;;
-       unknown)
-           info "Unknown distro, will not be able to install packages"
-           ;;
-       *)
-           error "Distro has been determined, but variables for it not defined"
-    esac
-}
+# # set_distro_vars <distro>
+# set_distro_vars() {
+#     case "$1" in
+#        arch)
+#          install_command="sudo pacman -S"
+#          query_command="pacman -Q"
+#          zsh_package="zsh"
+# 		 neovim_package="neovim"
+#          lastpass_package="lastpass-cli"
+#          ;;
+#        rhel)
+#            install_command="sudo dnf install"
+#            query_command="dnf list installed"
+#            python_package="python39"
+#            zsh_package="zsh"
+# 		   neovim_package="neovim.x86_64"
+#            lastpass_package="lastpass-cli.x86_64"
+#            ;;
+#        unknown)
+#            info "Unknown distro, will not be able to install packages"
+#            ;;
+#        *)
+#            error "Distro has been determined, but variables for it not defined"
+#     esac
+# }
 
-# info <message>
-info() {
-    echo DOC: $*
-}
+# # info <message>
+# info() {
+#     echo DOC: $*
+# }
 
-# error <message>
-error() {
-    echo "DOC-ERR: $*"
-    exit 1
-}
+# # error <message>
+# error() {
+#     echo "DOC-ERR: $*"
+#     exit 1
+# }
 
-is_ssh_keys_installed() {
-    if [ -d ~/.ssh ]  && [ -e ~/.ssh/id_rsa ] && [ -e ~/.ssh/id_rsa.pub ] ; then
-        return 0
-    else
-        return 1
- fi
-}
+# is_ssh_keys_installed() {
+#     if [ -d ~/.ssh ]  && [ -e ~/.ssh/id_rsa ] && [ -e ~/.ssh/id_rsa.pub ] ; then
+#         return 0
+#     else
+#         return 1
+#  fi
+# }
 
-is_fish_installed() {
-    command -v fish &> /dev/null
-}
+# is_zsh_installed() {
+#     command -v zsh &> /dev/null
+# }
 
-is_fish_my_shell() {
-    [ $(grep $USER /etc/passwd | cut -d : -f 7) = $FISH_LOCATION ] 
-}
+# is_zsh_my_shell() {
+#     [ $(grep $USER /etc/passwd | cut -d : -f 7) = $ZSH_LOCATION ]
+# }
 
-is_nvim_installed() {
-    command -v nvim &> /dev/null
-}
+# is_nvim_installed() {
+#     command -v nvim &> /dev/null
+# }
 
-# extract id_rsa and id_rsa.pub from my lastpass account
-extract_ssh_keys() {
-    if ! [ -d ~/.ssh ] ; then
-        info "~/.ssh missing, creating and chmoding"
-        mkdir ~/.ssh
-        chmod 700 ~/.ssh
-    fi
-    if ! lpass info | grep "Logged in as $LASTPASS_LOGIN" &> /dev/null
-    then
-        lpass login "${LASTPASS_LOGIN}"
-    fi
-    lpass show --notes ${LASTPASS_RSA_ID} > ~/.ssh/id_rsa
-    chmod 600 ~/.ssh/id_rsa
-    lpass show --notes ${LASTPASS_RSA_PUB_ID} > ~/.ssh/id_rsa.pub
-    info "SSH keys extracted"
-}
+# # extract id_rsa and id_rsa.pub from my lastpass account
+# extract_ssh_keys() {
+#     if ! [ -d ~/.ssh ] ; then
+#         info "~/.ssh missing, creating and chmoding"
+#         mkdir ~/.ssh
+#         chmod 700 ~/.ssh
+#     fi
+#     if ! lpass info | grep "Logged in as $LASTPASS_LOGIN" &> /dev/null
+#     then
+#         lpass login "${LASTPASS_LOGIN}"
+#     fi
+#     lpass show --notes ${LASTPASS_RSA_ID} > ~/.ssh/id_rsa
+#     chmod 600 ~/.ssh/id_rsa
+#     lpass show --notes ${LASTPASS_RSA_PUB_ID} > ~/.ssh/id_rsa.pub
+#     info "SSH keys extracted"
+# }
 
-# install_package <package_name>
-install_package() {
-    package_name=$1
-   if [ "${install_command}" = "" ] ; then
-        error "No install command set"
-    fi
-    if [ "${package_name}" = "" ] ; then
-        error "$0: no package name supplied"
-    fi
-    eval $install_command $package_name
-}
+# # install_package <package_name>
+# install_package() {
+#     package_name=$1
+#    if [ "${install_command}" = "" ] ; then
+#         error "No install command set"
+#     fi
+#     if [ "${package_name}" = "" ] ; then
+#         error "$0: no package name supplied"
+#     fi
+#     eval $install_command $package_name
+# }
 
-# main
+# # main
 
-determine_distro
-set_distro_vars ${distro}
+# determine_distro
+# set_distro_vars ${distro}
 
-if ! command -v git &> /dev/null ; then
-    error "git not installed"
-fi
+# if ! command -v git &> /dev/null ; then
+#     error "git not installed"
+#     exit 1
+# fi
 
-if ! command -v ssh &> /dev/null ; then
-    error "ssh not installed"
-fi
+# if ! command -v ssh &> /dev/null ; then
+#     error "ssh not installed"
+#     exit 1
+# fi
 
-if ! is_ssh_keys_installed ; then
-    info SSH-keys not installed, trying to extract with lastpass
-    if ! which lpass &> /dev/null ; then
-        if install_package ${lastpass_package} ; then
-            extract_ssh_keys
-        fi
-    else
-        extract_ssh_keys
-    fi
-else
-    info SSH keys already installed
-fi
+# if ! is_ssh_keys_installed ; then
+#     info SSH-keys not installed, trying to extract with lastpass
+#     if ! which lpass &> /dev/null ; then
+#         if install_package ${lastpass_package} ; then
+#             extract_ssh_keys
+#         fi
+#     else
+#         extract_ssh_keys
+#     fi
+# else
+#     info SSH keys already installed
+# fi
 
-# if yadm repo origin is https, switch to git
-if yadm remote get-url origin | grep ${REPO_HTTPS} &> /dev/null ; then
-    info "YADM repo is tracking the HTTPS url, changing to git"
-    yadm remote set-url origin ${REPO_GIT}
-else
-    info "YADM repo is tracking the git url"
-fi
+# # if yadm repo origin is https, switch to git
+# if yadm remote get-url origin | grep ${REPO_HTTPS} &> /dev/null ; then
+#     info "YADM repo is tracking the HTTPS url, changing to git"
+#     yadm remote set-url origin ${REPO_GIT}
+# else
+#     info "YADM repo is tracking the git url"
+# fi
 
-if is_fish_installed ; then
-    info "fish already installed"
-else
-    info "fish not installed, trying to install"
-    install_package ${fish_package}
-fi
+# if is_zsh_installed ; then
+#     info "zsh already installed"
+# else
+#     info "zsh not installed, trying to install"
+#     install_package ${zsh_package}
+# fi
 
-if is_fish_my_shell ; then
-    info "fish is my shell"
-else
-    info "fish is not my shell, changing"
-    chsh -s /usr/bin/fish
-fi
+# if is_zsh_my_shell ; then
+#     info "zsh is my shell"
+# else
+#     info "zsh is not my shell, changing"
+#     chsh -s /usr/bin/zsh
+# fi
 
-if is_nvim_installed ; then
-	info "Neovim is installed"
-else
-    info "Neovim is not installed, rectifying"
-	install_package ${neovim_package}
-fi
+# if is_nvim_installed ; then
+# 	info "Neovim is installed"
+# else
+#     info "Neovim is not installed, rectifying"
+# 	install_package ${neovim_package}
+# fi
 
-if test -e "${NVIM_VIM_PLUG_LOCATION}"  ; then
-	info "Neovim: vim-plug is installed"
-else
-	info "Neovim: vim-plug is not installed, rectifying"
-	curl -fLo "${NVIM_VIM_PLUG_LOCATION}" --create-dirs "${NVIM_VIM_PLUG_URL}" 
-fi
+# if test -e "${NVIM_VIM_PLUG_LOCATION}"  ; then
+# 	info "Neovim: vim-plug is installed"
+# else
+# 	info "Neovim: vim-plug is not installed, rectifying"
+# 	curl -fLo "${NVIM_VIM_PLUG_LOCATION}" --create-dirs "${NVIM_VIM_PLUG_URL}"
+# fi
 
-info "Neovim: installing plugins"
-nvim --headless -c PlugInstall -c q! -c q! 2> /dev/null
-
-
-
+# info "Neovim: installing plugins"
+# nvim --headless -c PlugInstall -c q! -c q! 2> /dev/null
