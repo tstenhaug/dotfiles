@@ -44,14 +44,14 @@ set_distro_vars() {
          zsh_package="zsh"
          ;;
        centos)
-           install_command="sudo dnf install"
+           install_command="sudo dnf install -y"
            query_command="dnf list installed"
            python_command="python3"
            python_package="python39"
            zsh_package="zsh"
            ;;
        fedora)
-           install_command="sudo dnf install"
+           install_command="sudo dnf install -y"
            query_command="dnf list installed"
            python_command="python3"
            python_package="python3"
