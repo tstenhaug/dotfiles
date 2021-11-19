@@ -6,7 +6,7 @@ import sys
 import subprocess
 import xdg
 
-if platform.system() !="Linux":
+if platform.system() != 'Linux':
    sys.exit("doctor currently only works on Linux systems")
 
 zsh_location = '/usr/bin/zsh'
