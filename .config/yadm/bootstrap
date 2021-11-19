@@ -85,6 +85,13 @@ is_zsh_installed() {
     command -v zsh &> /dev/null
 }
 
+# ensure_pip_module <module>
+ensure_pip_module() {
+    if ! $python -c "import $1" &> /dev/null ; then
+        $pip_command install --user module
+    fi
+}
+
 determine_distro
 set_distro_vars ${distro}
 
@@ -104,6 +111,8 @@ info "submodule init"
 if ! is_python_installed ; then
     install_package python
 fi
+
+ensure_pip_module xdg
 
 if ! is_zsh_installed ; then
     install_package zsh
