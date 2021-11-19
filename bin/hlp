@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+
+# hlp -- open documentation for topic
+
+import click
+import sys
+import os
+
+topics = {
+    "abbr": "https://github.com/olets/zsh-abbr",
+    "click": "https://click.palletsprojects.com/en/8.0.x/#documentation",
+    "kitty": "https://sw.kovidgoyal.net/kitty/conf/"
+}
+
+launcher="xdg-open"
+
+@click.command()
+@click.argument('topic', type=click.Choice(topics.keys()))
+def hlp(topic):
+    """Launch help for a topic"""
+    os.system(f'{launcher} {topics[topic]}')
+
+if __name__ == '__main__':
+    hlp()
