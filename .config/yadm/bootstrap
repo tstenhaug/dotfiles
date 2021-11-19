@@ -35,13 +35,17 @@ determine_distro() {
 
 # set_distro_vars <distro>
 set_distro_vars() {
+    info "configuring vars for $1"
     case "$1" in
        arch)
          install_command="sudo pacman -S"
          query_command="pacman -Q"
+
          python_command="python"
          python_package="python"
          pip_command="pip"
+         pip_package="python-pip"
+         zsh_command="zsh"
          zsh_package="zsh"
          ;;
        centos)
@@ -50,6 +54,8 @@ set_distro_vars() {
            python_command="python3"
            python_package="python39"
            pip_command="pip3"
+           pip_package="python39-pip"
+           zsh_command="zsh"
            zsh_package="zsh"
            ;;
        fedora)
@@ -58,14 +64,25 @@ set_distro_vars() {
            python_command="python3"
            python_package="python3"
            pip_command="pip3"
+           pip_package="python3-pip"
+           zsh_command="zsh"
            zsh_package="zsh"
            ;;
        unknown)
-           info "Unknown distro, will not be able to install packages"
+           error "Unknown distro"
            ;;
        *)
            error "Distro has been determined, but variables for it not defined"
     esac
+    info "continuing with following vars"
+    info "  install_command=\"${install_command?install_command missing}\""
+    info "  query_command=\"${query_command?query_command missing}\""
+    info "  python_command=\"${python_command?python_command missing}\""
+    info "  python_package=\"${python_package?python_package missing}\""
+    info "  pip_command=\"${pip_command?pip_command missing}\""
+    info "  pip_package=\"${pip_package?pip_package missing}\""
+    info "  zsh_command=\"${zsh_command?zsh_command missing}\""
+    info "  zsh_package=\"${zsh_package?zsh_package missing}\""
 }
 
 # install_package <package_name>
@@ -82,25 +99,23 @@ install_package() {
     fi
 }
 
-is_python_installed() {
-    info "checking if python is installed"
-    if command -v python &> /dev/null ; then
-        info "  yes"
-        return 0
-    else
-        info "  no"
-        return 1
+ensure_element_is_installed() {
+    if [ "$1" = "" ] ; then
+        error "no argument passed to ensure_element_is_installed"
     fi
-}
-
-is_zsh_installed() {
-    info "checking if zsh is installed"
-    if command -v zsh &> /dev/null ; then
+    local element command_var command package_var package
+    element="$1"
+    info "checking if ${element} is installed"
+    command_var=${element}_command
+    command=${!command_var}
+    package_var=${element}_package
+    package=${!package_var}
+    if command -v ${command} &> /dev/null ; then
         info "  yes"
         return 0
     else
-        info "  no"
-        return 1
+        info "  no -- installing"
+        install_package ${package}
     fi
 }
 
@@ -122,19 +137,14 @@ if ! command -v ssh &> /dev/null ; then
     error "ssh not installed"
 fi
 
-info "submodule init"
-~/bin/yadm submodule update --recursive --init
-
-if ! is_python_installed ; then
-    info "Python not installed, rectifying"
-    install_package python
-fi
+for elt in python pip zsh ; do
+    ensure_element_is_installed $elt
+done
 
 ensure_pip_module xdg
 
-if ! is_zsh_installed ; then
-    install_package zsh
-fi
+info "submodule init"
+~/bin/yadm submodule update --recursive --init
 
 info "punting to doctor"
 ~/bin/doctor
