@@ -46,13 +46,15 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 SSH_AUTH_SOCK=${SSH_AUTH_SOCK:-${XDG_RUNTIME_DIR}/ssh-agent.socket}
-export SSH_AUTH_SOCK
 DOOMDIR=${DOOMDIR:-${HOME}/emacs/doom.d/ke}
 
 if [[ -o interactive ]] ; then
-	if ssh-add -l | grep "The agent has no identities" > /dev/null ; then
-		ssh-add
-	fi	
+  if [ -f $SSH_AUTH_SOCK ] ; then
+    export SSH_AUTH_SOCK
+    if ssh-add -l | grep "The agent has no identities" > /dev/null ; then
+      ssh-add
+    fi
+  fi
 fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
