@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Get enough working that we can run doctor script
+# yadm/bootstrap -- ensure enough is installed to punt to bin/doctor
 
 # info <message>
 info() {
