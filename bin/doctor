@@ -1,22 +1,188 @@
 #!/usr/bin/env python3
 
+# doctor -- diagnose and fix Karvus Environment as described by configuration.
+
+import argparse
 import os
 import platform
-import sys
 import subprocess
+import sys
+import warnings
+import yaml
 import xdg
+from voluptuous import Schema, Required
+from typing import Callable, TypedDict
 
 if platform.system() != 'Linux':
    sys.exit("doctor currently only works on Linux systems")
 
-zsh_location = '/usr/bin/zsh'
-lastpass_login = 'karvus@gmail.com'
-lastpass_rsa_id = '2551172036'
-lastpass_rsa_pub_id = '2551170726'
-repo_https = 'https://github.com/tstenhaug/dotfiles.git'
-repo_git = 'git@github.com:tstenhaug/dotfiles.git'
-nvim_vim_plug_url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-nvim_vim_plug_location = f'{xdg.xdg_data_home()}/nvim/site/autoload/plug.vim'
+# Constants
+
+ZSH_LOCATION = '/usr/bin/zsh'
+LASTPASS_LOGIN = 'karvus@gmail.com'
+LASTPASS_RSA_ID = '2551172036'
+LASTPASS_RSA_PUB_ID = '2551170726'
+REPO_HTTPS = 'https://github.com/tstenhaug/dotfiles.git'
+REPO_GIT = 'git@github.com:tstenhaug/dotfiles.git'
+CONFIG_FILENAME = f'{xdg.xdg_config_home()}/ke/doctor.yml'
+
+# Diagnostic
+
+def diagnose_ssh_keys(config_value: bool):
+   warnings.warn('diagnose_ssh_keys is a stub')
+
+def diagnose_nvim(config_value: bool):
+   warnings.warn('diagnose_nvim is a stub')
+
+# Applicators -- functions that apply configuration elements
+
+def install_ssh_keys(val: bool):
+   warnings.warn('install_ssh_keys is a stub')
+
+def configure_nvim(val: bool):
+   warnings.warn('configure_nvim is a stub')
+
+# Prompters (askers)
+
+def ask_yn(prompt: str):
+   while True:
+      ans = input(prompt + ' (y/n) ')
+      if ans in ['y', 'n']:
+         return ans == True
+
+# Configuration
+
+## Configuration elements
+
+class Element:
+   """Represents a configuration element"""
+
+   def __init__(self, id, description, ask_for_value, diagnose, apply, schema_validator):
+      self.id = id
+      self.description = description
+      self.ask_for_value = ask_for_value
+      self.diagnose = diagnose
+      self.apply = apply
+      self.schema_validator = schema_validator
+
+ELEMENT_LIST = [
+   Element(
+      id='install-ssh-keys',
+      description='Install default SSH private and public RSA keys',
+      ask_for_value=ask_yn,
+      diagnose=diagnose_ssh_keys,
+      apply=install_ssh_keys,
+      schema_validator=bool
+   ),
+]
+
+ELEMENTS = { elt.id: elt for elt in ELEMENT_LIST }
+
+# Validation
+
+CONFIG_SCHEMA = Schema({
+   Required(element.id): element.schema_validator for element in ELEMENT_LIST
+})
+
+def validate_or_die(config, config_schema=CONFIG_SCHEMA):
+   try:
+      config_schema(config)
+   except Exception as e:
+      error(f'invalid configuration: {config}')
+      error(e)
+      exit(1)
+   return True
+
+# Printers
+
+def info(msg, newline=True):
+   print('DOCTOR:', msg, end = '\n' if newline else '')
+
+def warn(msg, newline=True):
+   if not newline:
+      end = ''
+   print('DOCTOR-WARNING:', msg, file=sys.stderr)
+
+ANSI_RED = u'\u001b[31m'
+ANSI_RESET = u'\u001b[0m'
+
+def error(msg, newline=True):
+   if not newline:
+      end = ''
+   print(f'{ANSI_RED}DOCTOR-ERROR{ANSI_RESET}:', msg, file=sys.stderr)
+
+# Commands
+
+def ask_config(element_list):
+   """Prompt for values for all configuration elements."""
+   config = {}
+   for elt in element_list:
+      config[elt.id] = elt.ask_for_value(elt.description)
+   validate_or_die(config)
+   return config
+
+def apply_config(config, elements=ELEMENTS):
+   """Apply configuration elements to the system."""
+   for id, config_value in config.items():
+      elements[id].apply(config_value)
+
+# Helpers
+
+def load_config(config_file):
+   if not os.path.isfile(config_file):
+      error('config file not found; try running doctor with --configure')
+      exit(1)
+   else:
+      with open(config_file) as file:
+         config = yaml.load(file, Loader=yaml.FullLoader)
+         validate_or_die(config)
+         return config
+
+def write_config(config, config_filename=CONFIG_FILENAME):
+   info(f'writing config to {config_filename}')
+   dirname = os.path.dirname(config_filename)
+   if not os.path.isdir(dirname):
+      os.makedirs(dirname)
+   with open(config_filename, 'w') as file:
+      file.write(yaml.dump(config))
+
+# Argument parsing
+
+def get_parser():
+   parser = argparse.ArgumentParser(
+      description =
+      'Diagnose and fix Karvus Environment as described by configuration.'
+      )
+   parser.add_argument('--configure', dest='configure', action='store_true',
+                       help='invoke configuration wizard')
+   parser.add_argument('--apply', dest='apply', action='store_true',
+                       help='apply configuration')
+   return parser
+
+def diagnose(config, elements=ELEMENTS):
+   """Run diagnostics for all configured elements."""
+   for config_id, config_value in config.items():
+      elt = elements[config_id]
+      elt.diagnose(config_value)
+
+# Main
+
+if __name__ == '__main__':
+
+   args = get_parser().parse_args()
+
+   if args.configure:
+      config = ask_config(ELEMENT_LIST)
+      write_config(config)
+   else:
+      config = load_config(CONFIG_FILENAME)
+
+   diagnose(config)
+
+   if args.apply:
+      apply_config(config)
+
+# It seems
 
 # # try to figure out which distro we're on
 # determine_distro() {
