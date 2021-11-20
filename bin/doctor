@@ -2,6 +2,8 @@
 
 # doctor -- diagnose and fix Karvus Environment as described by configuration.
 
+# * Prologue
+
 import argparse
 import os
 import platform
@@ -16,7 +18,7 @@ from typing import Callable, TypedDict
 if platform.system() != 'Linux':
    sys.exit("doctor currently only works on Linux systems")
 
-# Constants
+# * Constants
 
 ZSH_LOCATION = '/usr/bin/zsh'
 LASTPASS_LOGIN = 'karvus@gmail.com'
@@ -27,9 +29,10 @@ REPO_GIT = 'git@github.com:tstenhaug/dotfiles.git'
 CONFIG_FILENAME = f'{xdg.xdg_config_home()}/ke/doctor.yml'
 HOME=os.path.expanduser('~')
 
-# Configuration
 
-## Configuration elements
+# * Configuration
+
+# ** Configuration elements
 
 class Element:
    """Represents a configuration element"""
@@ -57,7 +60,7 @@ def get_element_list():
 def get_elements():
    return { elt.id: elt for elt in get_element_list() }
 
-# Diagnostic
+# * Diagnostic
 
 def diagnose_ssh_keys(config_value: bool):
    """Check that ssh configuration exists and have correct permissions."""
@@ -83,7 +86,7 @@ def diagnose_against_config(config, elements):
          info(f'=== {config_id} ===')
          elt.diagnose(config_value)
 
-# Applicators -- functions that apply configuration elements
+# * Applicators -- functions that apply configuration elements
 
 def install_ssh_keys(val: bool):
    warnings.warn('install_ssh_keys is a stub')
@@ -91,7 +94,7 @@ def install_ssh_keys(val: bool):
 def configure_nvim(val: bool):
    warnings.warn('configure_nvim is a stub')
 
-# Prompters (askers)
+# * Prompters (askers)
 
 def ask_yn(prompt: str):
    while True:
@@ -99,7 +102,7 @@ def ask_yn(prompt: str):
       if ans in ['y', 'n']:
          return ans == 'y'
 
-# Validation
+# * Validation
 
 def validate_or_die(config, config_schema):
    try:
@@ -115,7 +118,7 @@ def get_config_schema(element_list=get_element_list()):
       Required(element.id): element.schema_validator for element in element_list
 })
 
-# Printers
+# * Printers
 
 ANSI_GREEN = u'\u001b[32m'
 ANSI_RED = u'\u001b[31m'
@@ -137,7 +140,7 @@ def error(msg, newline=True):
       end = ''
    print(f'{ANSI_RED}DOCTOR-ERROR{ANSI_RESET}:', msg, file=sys.stderr)
 
-# Commands
+# * Commands
 
 def ask_config(elements):
    """Prompt for values for all configuration elements."""
@@ -188,7 +191,7 @@ def check_file(filename, permissions, exist_test=os.path.isfile):
          return True
    return False
 
-# Argument parsing
+# * Argument parsing
 
 def get_parser():
    parser = argparse.ArgumentParser(
@@ -202,7 +205,7 @@ def get_parser():
    return parser
 
 
-# Main
+# * Main
 
 if __name__ == '__main__':
 
@@ -219,8 +222,6 @@ if __name__ == '__main__':
    if args.apply:
       apply_config(config, get_elements())
 
-
-# It seems
 
 # # try to figure out which distro we're on
 # determine_distro() {
@@ -387,3 +388,7 @@ if __name__ == '__main__':
 
 # info "Neovim: installing plugins"
 # nvim --headless -c PlugInstall -c q! -c q! 2> /dev/null
+
+# Local Variables:
+# eval: (outshine-mode 1)
+# End:
