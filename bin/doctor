@@ -59,25 +59,15 @@ def get_elements():
 
 # Diagnostic
 
-def diagnose_file(filename, permissions, exist_test=os.path.isfile):
-   if not exist_test(filename):
-      warn(f'{filename} is missing')
-   else:
-      if mod(filename) != permissions:
-         warn(f'{filename} exists but have incorrect permissions')
-      else:
-         info(f'{filename} exists and have correct permissions')
-         return True
-   return False
-
 def diagnose_ssh_keys(config_value: bool):
+   """Check that ssh configuration exists and have correct permissions."""
    ssh = f'{HOME}/.ssh'
    id_rsa = f'{ssh}/id_rsa'
    id_rsa_pub = f'{id_rsa}.pub'
-   if not diagnose_file(ssh, 0o700, exist_test=os.path.isdir):
+   if not check_file(ssh, 0o700, exist_test=os.path.isdir):
       return False
    else:
-      return diagnose_file(id_rsa, 0o600) and diagnose_file(id_rsa_pub, 0o600)
+      return check_file(id_rsa, 0o600) and check_file(id_rsa_pub, 0o600)
 
 def diagnose_nvim(config_value: bool):
    warnings.warn('diagnose_nvim is a stub')
@@ -185,6 +175,18 @@ def write_config(config, config_filename=CONFIG_FILENAME):
 def mod(filename):
    """Return the access ("mod") bits of filename"""
    return os.stat(filename).st_mode & 0o777
+
+def check_file(filename, permissions, exist_test=os.path.isfile):
+   """Check if file exists and have correct permissions."""
+   if not exist_test(filename):
+      warn(f'{filename} is missing')
+   else:
+      if mod(filename) != permissions:
+         warn(f'{filename} exists but have incorrect permissions')
+      else:
+         info(f'{filename} exists and have correct permissions')
+         return True
+   return False
 
 # Argument parsing
 
