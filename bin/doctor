@@ -2,226 +2,296 @@
 
 # doctor -- diagnose and fix Karvus Environment as described by configuration.
 
-# * Prologue
-
 import argparse
 import os
 import platform
-import subprocess
 import sys
+from typing import cast, Any, TypedDict, Literal
 import warnings
 import yaml
 import xdg
 from voluptuous import Schema, Required, Invalid
 from typing import Callable, TypedDict
 
-if platform.system() != 'Linux':
-   sys.exit("doctor currently only works on Linux systems")
+if platform.system() != "Linux":
+    sys.exit("doctor currently only works on Linux systems")
 
 # * Constants
 
-ZSH_LOCATION = '/usr/bin/zsh'
-LASTPASS_LOGIN = 'karvus@gmail.com'
-LASTPASS_RSA_ID = '2551172036'
-LASTPASS_RSA_PUB_ID = '2551170726'
-REPO_HTTPS = 'https://github.com/tstenhaug/dotfiles.git'
-REPO_GIT = 'git@github.com:tstenhaug/dotfiles.git'
-CONFIG_FILENAME = f'{xdg.xdg_config_home()}/ke/doctor.yml'
-HOME=os.path.expanduser('~')
+ZSH_LOCATION = "/usr/bin/zsh"
+LASTPASS_LOGIN = "karvus@gmail.com"
+LASTPASS_RSA_ID = "2551172036"
+LASTPASS_RSA_PUB_ID = "2551170726"
+REPO_HTTPS = "https://github.com/tstenhaug/dotfiles.git"
+REPO_GIT = "git@github.com:tstenhaug/dotfiles.git"
+CONFIG_FILENAME = f"{xdg.xdg_config_home()}/ke/doctor.yml"
+HOME = os.path.expanduser("~")
+
+# ** Distro constants
+
+
+class Package(TypedDict):
+    """A command, and the distro-package in which it is found."""
+
+    command: str
+    package_name: str
+
+
+class DistroSpec(TypedDict):
+    """Specification for a distro for which we can install packages."""
+
+    install_command: list[str]
+    query_command: list[str]
+    lastpass: Package
+    zsh: Package
+
+
+Distroname = Literal["archlinux", "fedora"]
+
+
+def get_distrospecs() -> dict[Distroname, DistroSpec]:
+    return {
+        "archlinux": DistroSpec(
+            install_command=["sudo", "pacman", "-S"],
+            query_command=["pacman", "-Q"],
+            lastpass=Package(command="lpass", package_name="lastpass-cli"),
+            zsh=Package(command="zsh", package_name="zsh"),
+        ),
+        "fedora": DistroSpec(
+            install_command=["sudo", "dnf", "install"],
+            query_command=["dnf", "list", "installed"],
+            lastpass=Package(command="lpass", package_name="lastpass-cli"),
+            zsh=Package(command="zsh", package_name="zsh"),
+        ),
+    }
 
 
 # * Configuration
 
 # ** Configuration elements
 
-class Element:
-   """Represents a configuration element"""
+ConfigurableName = Literal["ssh-keys"]
 
-   def __init__(self, id, description, ask_for_value, diagnose, apply, schema_validator):
-      self.id = id
-      self.description = description
-      self.ask_for_value = ask_for_value
-      self.diagnose = diagnose
-      self.apply = apply
-      self.schema_validator = schema_validator
 
-def get_element_list():
-   return [
-      Element(
-         id='ssh-keys',
-         description='Install default SSH private and public RSA keys',
-         ask_for_value=ask_yn,
-         diagnose=diagnose_ssh_keys,
-         apply=install_ssh_keys,
-         schema_validator=bool
-      ),
-   ]
+class Configurable(TypedDict):
+    """Represents an element of KE that can be handled by doctor."""
 
-def get_elements():
-   return { elt.id: elt for elt in get_element_list() }
+    description: str
+    ask_for_value: Callable[[str], Any]
+    diagnose: Callable[[Any], bool]
+    apply: Callable[[Any], bool]
+    schema_validator: Any  # TODO this should be a constructor
+
+
+def get_config_elements() -> dict[ConfigurableName, Configurable]:
+    return {
+        "ssh-keys": Configurable(
+            description="Install default SSH private and public RSA keys",
+            ask_for_value=ask_yn,
+            diagnose=diagnose_ssh_keys,
+            apply=install_ssh_keys,
+            schema_validator=bool,
+        )
+    }
+
+
+# ** Config
+
+Config = dict[ConfigurableName, Any]
 
 # * Diagnostic
 
+
 def diagnose_ssh_keys(config_value: bool):
-   """Check that ssh configuration exists and have correct permissions."""
-   ssh = f'{HOME}/.ssh'
-   id_rsa = f'{ssh}/id_rsa'
-   id_rsa_pub = f'{id_rsa}.pub'
-   if not check_file(ssh, 0o700, exist_test=os.path.isdir):
-      return False
-   else:
-      return check_file(id_rsa, 0o600) and check_file(id_rsa_pub, 0o600)
+    """Check that ssh configuration exists and have correct permissions."""
+    ssh = f"{HOME}/.ssh"
+    id_rsa = f"{ssh}/id_rsa"
+    id_rsa_pub = f"{id_rsa}.pub"
+    if not check_file(ssh, 0o700, exist_test=os.path.isdir):
+        return False
+    else:
+        return check_file(id_rsa, 0o600) and check_file(id_rsa_pub, 0o600)
+
 
 def diagnose_nvim(config_value: bool):
-   warnings.warn('diagnose_nvim is a stub')
+    warnings.warn("diagnose_nvim is a stub")
 
-def diagnose_against_config(config, elements):
-   """Run diagnostics for all configured elements."""
-   info('running diagnostics against current configuration')
-   for config_id, config_value in config.items():
-      if not config_value:
-         info(f'{config_id}: skipping')
-      else:
-         elt = elements[config_id]
-         info(f'=== {config_id} ===')
-         elt.diagnose(config_value)
+
+def diagnose_against_config(config: Config) -> None:
+    """Run diagnostics for all configured elements."""
+    elements = get_config_elements()
+    info("running diagnostics against current configuration")
+    for config_id, config_value in config.items():
+        if not config_value:
+            info(f"{config_id}: skipping")
+        else:
+            elt = elements[config_id]
+            info(f"=== {config_id} ===")
+            elt["diagnose"](config_value)
+
 
 # * Applicators -- functions that apply configuration elements
 
-def install_ssh_keys(val: bool):
-   warnings.warn('install_ssh_keys is a stub')
 
-def configure_nvim(val: bool):
-   warnings.warn('configure_nvim is a stub')
+def install_ssh_keys(val: bool) -> bool:
+    warnings.warn("install_ssh_keys is a stub")
+    return False
+
+
+def configure_nvim(val: bool) -> bool:
+    warnings.warn("configure_nvim is a stub")
+    return False
+
 
 # * Prompters (askers)
 
+
 def ask_yn(prompt: str):
-   while True:
-      ans = input(prompt + ' (y/n) ')
-      if ans in ['y', 'n']:
-         return ans == 'y'
+    while True:
+        ans = input(prompt + " (y/n) ")
+        if ans in ["y", "n"]:
+            return ans == "y"
+
 
 # * Validation
 
-def validate_or_die(config, config_schema):
-   try:
-      config_schema(config)
-   except Invalid as e:
-      error(f'invalid configuration: {config}')
-      error(e)
-      exit(1)
-   return True
 
-def get_config_schema(element_list=get_element_list()):
-   return Schema({
-      Required(element.id): element.schema_validator for element in element_list
-})
+def validate_or_die(config: Config, config_schema: Schema) -> None:
+    try:
+        config_schema(config)
+    except Invalid as e:
+        error(f"invalid configuration: {config}")
+        error(str(e))
+        exit(1)
+
+
+def get_config_schema():
+    return Schema(
+        {
+            Required(key): elt["schema_validator"]
+            for key, elt in get_config_elements().items()
+        }
+    )
+
 
 # * Printers
 
-ANSI_GREEN = u'\u001b[32m'
-ANSI_RED = u'\u001b[31m'
-ANSI_YELLOW = u'\u001b[33m'
-ANSI_RESET = u'\u001b[0m'
+ANSI_GREEN = "\u001b[32m"
+ANSI_RED = "\u001b[31m"
+ANSI_YELLOW = "\u001b[33m"
+ANSI_RESET = "\u001b[0m"
 
-def info(msg, newline=True):
-   print(f'{ANSI_GREEN}DOCTOR{ANSI_RESET}:',
-         msg,
-         end = '\n' if newline else '')
 
-def warn(msg, newline=True):
-   if not newline:
-      end = ''
-   print(f'{ANSI_YELLOW}DOCTOR-WARNING{ANSI_RESET}:', msg, file=sys.stderr)
+def info(msg: str, newline: bool = True):
+    print(f"{ANSI_GREEN}DOCTOR{ANSI_RESET}:", msg, end="\n" if newline else "")
 
-def error(msg, newline=True):
-   if not newline:
-      end = ''
-   print(f'{ANSI_RED}DOCTOR-ERROR{ANSI_RESET}:', msg, file=sys.stderr)
+
+def warn(msg: str):
+    print(f"{ANSI_YELLOW}DOCTOR-WARNING{ANSI_RESET}:", msg, file=sys.stderr)
+
+
+def error(msg: str):
+    print(f"{ANSI_RED}DOCTOR-ERROR{ANSI_RESET}:", msg, file=sys.stderr)
+
 
 # * Commands
 
-def ask_config(elements):
-   """Prompt for values for all configuration elements."""
-   config = {}
-   for elt in elements.values():
-      config[elt.id] = elt.ask_for_value(elt.description)
-   validate_or_die(config, get_config_schema())
-   return config
 
-def apply_config(config, elements):
-   """Apply configuration elements to the system."""
-   for id, config_value in config.items():
-      elements[id].apply(config_value)
+def ask_config() -> Config:
+    """Prompt for values for all configuration elements."""
+    config: Config = {}
+    for key, elt in get_config_elements().items():
+        config[key] = elt["ask_for_value"](elt["description"])
+    validate_or_die(config, get_config_schema())
+    return config
 
-# Helpers
 
-def load_config(config_file):
-   if not os.path.isfile(config_file):
-      error('config file not found; try running doctor with --configure')
-      exit(1)
-   else:
-      with open(config_file) as file:
-         config = yaml.load(file, Loader=yaml.FullLoader)
-         validate_or_die(config, get_config_schema())
-         return config
+def apply_config(config: Config):
+    """Apply configuration elements to the system."""
+    elements = get_config_elements()
+    for key, config_value in config.items():
+        elements[key]["apply"](config_value)
 
-def write_config(config, config_filename=CONFIG_FILENAME):
-   info(f'writing config to {config_filename}')
-   dirname = os.path.dirname(config_filename)
-   if not os.path.isdir(dirname):
-      os.makedirs(dirname)
-   with open(config_filename, 'w') as file:
-      file.write(yaml.dump(config))
 
-def mod(filename):
-   """Return the access ("mod") bits of filename"""
-   return os.stat(filename).st_mode & 0o777
+# * Helpers
 
-def check_file(filename, permissions, exist_test=os.path.isfile):
-   """Check if file exists and have correct permissions."""
-   if not exist_test(filename):
-      warn(f'{filename} is missing')
-   else:
-      if mod(filename) != permissions:
-         warn(f'{filename} exists but have incorrect permissions')
-      else:
-         info(f'{filename} exists and have correct permissions')
-         return True
-   return False
+
+def load_config(config_file: str) -> Config:
+    if not os.path.isfile(config_file):
+        error("config file not found; try running doctor with --configure")
+        exit(1)
+    else:
+        with open(config_file) as file:
+            config = cast(Any, yaml).load(file, Loader=yaml.FullLoader)
+            validate_or_die(config, get_config_schema())
+            return config
+
+
+def write_config(config: Config, filename: str = CONFIG_FILENAME) -> bool:
+    info(f"writing config to {filename}")
+    dirname = os.path.dirname(filename)
+    if not os.path.isdir(dirname):
+        os.makedirs(dirname)
+    with open(filename, "w") as file:
+        file.write(cast(Any, yaml).dump(config))
+    return True
+
+
+def mod(filename: str):
+    """Return the access ("mod") bits of filename"""
+    return os.stat(filename).st_mode & 0o777
+
+
+def check_file(
+    filename: str, permissions: int, exist_test: Callable[[str], bool] = os.path.isfile
+):
+    """Check if file exists and have correct permissions."""
+    if not exist_test(filename):
+        warn(f"{filename} is missing")
+    else:
+        if mod(filename) != permissions:
+            warn(f"{filename} exists but have incorrect permissions")
+        else:
+            info(f"{filename} exists and have correct permissions")
+            return True
+    return False
+
 
 # * Argument parsing
 
+
 def get_parser():
-   parser = argparse.ArgumentParser(
-      description =
-      'Diagnose and fix Karvus Environment as described by configuration.'
-      )
-   parser.add_argument('--configure', dest='configure', action='store_true',
-                       help='invoke configuration wizard')
-   parser.add_argument('--apply', dest='apply', action='store_true',
-                       help='apply configuration')
-   return parser
+    parser = argparse.ArgumentParser(
+        description="Diagnose and fix Karvus Environment as described by configuration."
+    )
+    parser.add_argument(
+        "--configure",
+        dest="configure",
+        action="store_true",
+        help="invoke configuration wizard",
+    )
+    parser.add_argument(
+        "--apply", dest="apply", action="store_true", help="apply configuration"
+    )
+    return parser
 
 
 # * Main
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
-   args = get_parser().parse_args()
+    args = get_parser().parse_args()
 
-   if args.configure:
-      config = ask_config(get_elements())
-      write_config(config)
-   else:
-      config = load_config(CONFIG_FILENAME)
+    if args.configure:
+        config = ask_config()
+        write_config(config)
+    else:
+        config = load_config(CONFIG_FILENAME)
 
-   diagnose_against_config(config, get_elements())
+    diagnose_against_config(config)
 
-   if args.apply:
-      apply_config(config, get_elements())
-
+    if args.apply:
+        apply_config(config)
 
 # # try to figure out which distro we're on
 # determine_distro() {
