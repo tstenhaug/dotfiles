@@ -154,7 +154,7 @@ def diagnose_against_config(config: Config) -> None:
 
 def lpass_is_logged_in() -> bool:
     cp = subprocess.run(['lpass', 'status'], capture_output=True)
-    return cp.stdout.startswith(b'Not logged in.')
+    return cp.stdout.startswith(b'Logged in')
 
 def lpass_login(login: str) -> bool:
     while True:
