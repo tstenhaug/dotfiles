@@ -109,11 +109,13 @@
 "[typescriptreact]": {
   "editor.defaultFormatter": "esbenp.prettier-vscode"
 },
-"workbench.colorTheme": "City Lights",
+"workbench.colorTheme": "Nord",
 "python.defaultInterpreterPath": "/bin/python3",
 "plantuml.render": "PlantUMLServer",
 "plantuml.server": "http://localhost:8080",
 "editor.find.addExtraSpaceOnTop": false,
 "gitlens.mode.active": "zen",
-"vscode-neovim.neovimExecutablePaths.linux": "/usr/bin/nvim"
+"vscode-neovim.neovimExecutablePaths.linux": "/usr/bin/nvim",
+"window.zoomLevel": 1,
+"window.menuBarVisibility": "toggle"
 } 
