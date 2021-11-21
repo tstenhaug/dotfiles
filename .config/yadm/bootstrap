@@ -147,5 +147,4 @@ done
 info "submodule init"
 ~/bin/yadm submodule update --recursive --init
 
-info "punting to doctor"
-~/bin/doctor --configure --apply
+info "done, consider running ~/bin/doctor --configure --apply"

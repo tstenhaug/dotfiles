@@ -8,7 +8,7 @@ import os
 import platform
 import subprocess
 import sys
-from typing import cast, Any, Callable, TypedDict, Literal
+from typing import cast, Any, Callable, Literal
 import warnings
 import yaml
 import xdg
