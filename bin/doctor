@@ -6,6 +6,7 @@ import argparse
 import dataclasses
 import os
 import platform
+import subprocess
 import sys
 from typing import cast, Any, Callable, TypedDict, Literal
 import warnings
@@ -29,8 +30,8 @@ HOME = os.path.expanduser("~")
 
 # ** Distro constants
 
-
-class Package(TypedDict):
+@dataclasses.dataclass
+class Package:
     """A command, and the distro-package in which it is found."""
     command: str
     package_name: str
@@ -39,7 +40,8 @@ class Package(TypedDict):
 DistroCmd = list[str]
 
 
-class DistroSpec(TypedDict):
+@dataclasses.dataclass
+class DistroSpec:
     """Specification for a distro for which we can install packages."""
     install_command: DistroCmd
     query_command: DistroCmd
@@ -50,7 +52,7 @@ class DistroSpec(TypedDict):
 Distroname = Literal["archlinux", "fedora"]
 
 
-def get_distrospecs() -> dict[Distroname, DistroSpec]:
+def get_distro_specs() -> dict[Distroname, DistroSpec]:
     return {
         "archlinux":
         DistroSpec(
@@ -68,6 +70,14 @@ def get_distrospecs() -> dict[Distroname, DistroSpec]:
         ),
     }
 
+def get_distro_spec() -> DistroSpec:
+    distro_id = read_os_relase()['ID']
+    distro_specs = get_distro_specs()
+    if not distro_id in distro_specs.keys():
+        error(f"unknown distro: {distro_id} -- doctor must be extended to work here")
+        exit(1)
+    else:
+        return distro_specs[cast(Distroname, distro_id)]
 
 # * Configuration
 
@@ -144,6 +154,7 @@ def diagnose_against_config(config: Config) -> None:
 
 
 def install_ssh_keys(val: bool) -> bool:
+    
     warnings.warn("install_ssh_keys is a stub")
     return False
 
@@ -205,6 +216,36 @@ def apply_config(config: Config):
 
 
 # * Helpers
+
+def is_package_installed(package: Package) -> bool:
+    spec: DistroSpec = get_distro_spec()
+    cp = subprocess.run(spec.query_command + [ package.package_name]) 
+    return cp.returncode == 0
+
+
+def install_package(package: Package) -> bool:
+    spec = get_distro_spec()
+    cp = subprocess.run(spec.install_command + [ package.package_name])
+    return cp.returncode == 0
+
+
+def ensure_package_installed(package: Package) -> bool:
+    if is_package_installed(package):
+        info(f"package {package.package_name} is installed")
+        return True
+    else:
+        info(f"package {package.package_name} is not installed, fixing")
+        return install_package(package)
+        
+def read_os_relase() -> dict[str, str]:
+    """Read /etc/os-release and return its contents as a dict."""
+    with open("/etc/os-release") as file:
+        os_release: dict[str, str] = {}
+        for line in file:
+            k, v = line.rstrip().split("=")
+            os_release[k] = v.strip('"')
+        return os_release
+
 
 def validate_or_die(config: Any) -> Config:
     schema = get_config_schema()
