@@ -40,7 +40,6 @@ set_distro_vars() {
        arch)
          install_command="sudo pacman -S"
          query_command="pacman -Q"
-
          python_command="python"
          python_package="python"
          pip_command="pip"
@@ -141,7 +140,9 @@ for elt in python pip zsh ; do
     ensure_element_is_installed $elt
 done
 
-ensure_pip_module xdg
+for i in xdg voluptuous pyyaml ; do
+  ensure_pip_module $i
+done
 
 info "submodule init"
 ~/bin/yadm submodule update --recursive --init
