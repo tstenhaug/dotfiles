@@ -20,7 +20,7 @@ determine_distro() {
         return 0
     fi
    if [ -f  /etc/system-release ] ; then
-       if grep "CentOS|RHEL" /etc/system-release &> /dev/null ; then
+       if egrep "CentOS|RHEL" /etc/system-release &> /dev/null ; then
              distro=rhel
              return 0
        fi
