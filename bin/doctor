@@ -3,15 +3,15 @@
 # doctor -- diagnose and fix Karvus Environment as described by configuration.
 
 import argparse
+import dataclasses
 import os
 import platform
 import sys
-from typing import cast, Any, TypedDict, Literal
+from typing import cast, Any, Callable, TypedDict, Literal
 import warnings
 import yaml
 import xdg
-from voluptuous import Schema, Required, Invalid
-from typing import Callable, TypedDict
+import voluptuous
 
 if platform.system() != "Linux":
     sys.exit("doctor currently only works on Linux systems")
@@ -32,16 +32,17 @@ HOME = os.path.expanduser("~")
 
 class Package(TypedDict):
     """A command, and the distro-package in which it is found."""
-
     command: str
     package_name: str
 
 
+DistroCmd = list[str]
+
+
 class DistroSpec(TypedDict):
     """Specification for a distro for which we can install packages."""
-
-    install_command: list[str]
-    query_command: list[str]
+    install_command: DistroCmd
+    query_command: DistroCmd
     lastpass: Package
     zsh: Package
 
@@ -51,13 +52,15 @@ Distroname = Literal["archlinux", "fedora"]
 
 def get_distrospecs() -> dict[Distroname, DistroSpec]:
     return {
-        "archlinux": DistroSpec(
+        "archlinux":
+        DistroSpec(
             install_command=["sudo", "pacman", "-S"],
             query_command=["pacman", "-Q"],
             lastpass=Package(command="lpass", package_name="lastpass-cli"),
             zsh=Package(command="zsh", package_name="zsh"),
         ),
-        "fedora": DistroSpec(
+        "fedora":
+        DistroSpec(
             install_command=["sudo", "dnf", "install"],
             query_command=["dnf", "list", "installed"],
             lastpass=Package(command="lpass", package_name="lastpass-cli"),
@@ -73,9 +76,9 @@ def get_distrospecs() -> dict[Distroname, DistroSpec]:
 ConfigurableName = Literal["ssh-keys"]
 
 
-class Configurable(TypedDict):
+@dataclasses.dataclass
+class Configurable:
     """Represents an element of KE that can be handled by doctor."""
-
     description: str
     ask_for_value: Callable[[str], Any]
     diagnose: Callable[[Any], bool]
@@ -85,7 +88,8 @@ class Configurable(TypedDict):
 
 def get_config_elements() -> dict[ConfigurableName, Configurable]:
     return {
-        "ssh-keys": Configurable(
+        "ssh-keys":
+        Configurable(
             description="Install default SSH private and public RSA keys",
             ask_for_value=ask_yn,
             diagnose=diagnose_ssh_keys,
@@ -99,10 +103,16 @@ def get_config_elements() -> dict[ConfigurableName, Configurable]:
 
 Config = dict[ConfigurableName, Any]
 
+def get_config_schema() -> voluptuous.Schema:
+    schema = voluptuous.Schema({
+        key: elt.schema_validator for key, elt in get_config_elements().items()
+    })
+    return schema
+
 # * Diagnostic
 
 
-def diagnose_ssh_keys(config_value: bool):
+def diagnose_ssh_keys(config_value: bool) -> bool:
     """Check that ssh configuration exists and have correct permissions."""
     ssh = f"{HOME}/.ssh"
     id_rsa = f"{ssh}/id_rsa"
@@ -127,7 +137,7 @@ def diagnose_against_config(config: Config) -> None:
         else:
             elt = elements[config_id]
             info(f"=== {config_id} ===")
-            elt["diagnose"](config_value)
+            elt.diagnose(config_value)
 
 
 # * Applicators -- functions that apply configuration elements
@@ -155,25 +165,6 @@ def ask_yn(prompt: str):
 
 # * Validation
 
-
-def validate_or_die(config: Config, config_schema: Schema) -> None:
-    try:
-        config_schema(config)
-    except Invalid as e:
-        error(f"invalid configuration: {config}")
-        error(str(e))
-        exit(1)
-
-
-def get_config_schema():
-    return Schema(
-        {
-            Required(key): elt["schema_validator"]
-            for key, elt in get_config_elements().items()
-        }
-    )
-
-
 # * Printers
 
 ANSI_GREEN = "\u001b[32m"
@@ -199,10 +190,10 @@ def error(msg: str):
 
 def ask_config() -> Config:
     """Prompt for values for all configuration elements."""
-    config: Config = {}
+    config: dict[ConfigurableName, Any] = {}
     for key, elt in get_config_elements().items():
-        config[key] = elt["ask_for_value"](elt["description"])
-    validate_or_die(config, get_config_schema())
+        config[key] = elt.ask_for_value(elt.description)
+    validate_or_die(config)
     return config
 
 
@@ -210,11 +201,20 @@ def apply_config(config: Config):
     """Apply configuration elements to the system."""
     elements = get_config_elements()
     for key, config_value in config.items():
-        elements[key]["apply"](config_value)
+        elements[key].apply(config_value)
 
 
 # * Helpers
 
+def validate_or_die(config: Any) -> Config:
+    schema = get_config_schema()
+    try:
+        schema(config)
+    except voluptuous.Invalid as e:
+        error('invalid config: {config}')
+        error(str(e))
+        exit(1)
+    return config 
 
 def load_config(config_file: str) -> Config:
     if not os.path.isfile(config_file):
@@ -223,7 +223,7 @@ def load_config(config_file: str) -> Config:
     else:
         with open(config_file) as file:
             config = cast(Any, yaml).load(file, Loader=yaml.FullLoader)
-            validate_or_die(config, get_config_schema())
+            validate_or_die(config)
             return config
 
 
@@ -238,13 +238,13 @@ def write_config(config: Config, filename: str = CONFIG_FILENAME) -> bool:
 
 
 def mod(filename: str):
-    """Return the access ("mod") bits of filename"""
+    """Return the access ("mod") bits of filename."""
     return os.stat(filename).st_mode & 0o777
 
 
-def check_file(
-    filename: str, permissions: int, exist_test: Callable[[str], bool] = os.path.isfile
-):
+def check_file(filename: str,
+               permissions: int,
+               exist_test: Callable[[str], bool] = os.path.isfile) -> bool:
     """Check if file exists and have correct permissions."""
     if not exist_test(filename):
         warn(f"{filename} is missing")
@@ -262,17 +262,18 @@ def check_file(
 
 def get_parser():
     parser = argparse.ArgumentParser(
-        description="Diagnose and fix Karvus Environment as described by configuration."
-    )
+        description=
+        "Diagnose and fix Karvus Environment as described by configuration.")
     parser.add_argument(
         "--configure",
         dest="configure",
         action="store_true",
         help="invoke configuration wizard",
     )
-    parser.add_argument(
-        "--apply", dest="apply", action="store_true", help="apply configuration"
-    )
+    parser.add_argument("--apply",
+                        dest="apply",
+                        action="store_true",
+                        help="apply configuration")
     return parser
 
 
