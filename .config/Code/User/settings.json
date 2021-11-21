@@ -1,0 +1,119 @@
+{
+  "vetur.validation.script": false,
+  "editor.minimap.enabled": false,
+  "workbench.activityBar.visible": false,
+  "terminal.integrated.allowChords": false,
+  "terminal.integrated.commandsToSkipShell": ["-workbench.action.quickOpen"],
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true
+  },
+  "editor.suggestSelection": "first",
+  "editor.fontLigatures": true,
+  "keyboard.dispatch": "keyCode",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "vim.handleKeys": {
+    "<C-k>": false,
+    "<C-t>": false,
+    "<C-a>": false
+  },
+  "vim.leader": "<space>",
+  "vim.normalModeKeyBindings": [
+    {
+      "before": ["<leader>", "f", "s"],
+      "commands": ["workbench.action.files.save"]
+    },
+    {
+      "before": ["<leader>", "f", "f"],
+      "commands": ["editor.action.formatDocument"]
+    },
+    {
+      "before": ["<leader>", "b", "k"],
+      "commands": ["workbench.action.closeActiveEditor"]
+    },
+  ],
+ "vim.replaceWithRegister": true,
+  "vim.sneak": true,
+  "vim.easymotion": true,
+  "explorer.confirmDragAndDrop": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "terminal.integrated.automationShell.windows": "C:\\Windows\\System32\\cmd.exe",
+  "terminal.integrated.profiles.windows": {
+    "PowerShell -NoProfile": {
+      "source": "PowerShell",
+      "args": ["-NoProfile"]
+    }
+  },
+  "git.suggestSmartCommit": false,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "workbench.tree.indent": 18,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "vscode-neovim.neovimExecutablePaths.win32": "C:\\tools\\neovim\\Neovim\\bin\\nvim.exe",
+  "diffEditor.ignoreTrimWhitespace": false,
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "vim.foldfix": true,
+  "markdown.preview.scrollEditorWithPreview": false,
+  "markdown.preview.scrollPreviewWithEditor": false,
+  "githubIssues.queries": [
+    {
+      "label": "My Issues",
+      "query": "default"
+    },
+    {
+      "label": "Created Issues",
+      "query": "author:${user} state:open repo:${owner}/${repository} sort:created-desc"
+    }
+  ],
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "outline.showModules": false,
+  "outline.showVariables": false,
+  "search.quickOpen.includeSymbols": true,
+  "workbench.editor.highlightModifiedTabs": true,
+  "workbench.editor.showTabs": false,
+  "terminal.integrated.mouseWheelScrollSensitivity": 0.3,
+  "workbench.iconTheme": "vscode-icons",
+  "git.confirmSync": false,
+  "yaml.schemas": {},
+  "eslint.lintTask.enable": true,
+  "files.associations": {
+    "*.json": "jsonc"
+  },
+  "sqltools.format": {
+    "reservedWordCase": "upper"
+  },
+  "eslint.packageManager": "pnpm",
+  "npm.packageManager": "pnpm",
+"editor.fontFamily": "Fira Code",
+"terminal.integrated.fontFamily": "monospace",
+"terminal.integrated.letterSpacing": 1,
+"[vue]": {
+  "editor.defaultFormatter": "octref.vetur"
+},
+"[html]": {
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[typescriptreact]": {
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"workbench.colorTheme": "City Lights",
+"python.defaultInterpreterPath": "/bin/python3",
+"plantuml.render": "PlantUMLServer",
+"plantuml.server": "http://localhost:8080",
+"editor.find.addExtraSpaceOnTop": false,
+"gitlens.mode.active": "zen",
+"vscode-neovim.neovimExecutablePaths.linux": "/usr/bin/nvim"
+} 
