@@ -148,4 +148,4 @@ info "submodule init"
 ~/bin/yadm submodule update --recursive --init
 
 info "punting to doctor"
-~/bin/doctor
+~/bin/doctor --configure --apply
