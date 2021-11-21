@@ -169,7 +169,7 @@ def lpass_get_note(note_id: str) -> str:
         error(str(cp.stderr))
         exit(1)
     else:
-        return str(cp.stdout)
+        return cp.stdout.decode('ascii')
 
 def install_ssh_key(filename: str, key_id: str):
     if os.path.isfile(filename):
