@@ -152,11 +152,54 @@ def diagnose_against_config(config: Config) -> None:
 
 # * Applicators -- functions that apply configuration elements
 
+def lpass_is_logged_in() -> bool:
+    cp = subprocess.run(['lpass', 'status'], capture_output=True)
+    return cp.stdout.startswith(b'Not logged in.')
+
+def lpass_login(login: str) -> bool:
+    while True:
+      cp = subprocess.run(['lpass', 'login', login])
+      if cp.returncode == 0:
+          return True
+
+def lpass_get_note(note_id: str) -> str:
+    cp = subprocess.run(['lpass', 'show', '--notes', note_id], capture_output=True)
+    if cp.returncode != 0:
+        error(f'failed to get {note_id} from lastpass')
+        error(str(cp.stderr))
+        exit(1)
+    else:
+        return str(cp.stdout)
+
+def install_ssh_key(filename: str, key_id: str):
+    if os.path.isfile(filename):
+        info(f'{filename} already exists, skipping')
+    else:
+        id_rsa = lpass_get_note(key_id) 
+        with open(filename, 'w') as file:
+            file.write(id_rsa)
+        os.chmod(filename, 0o600)
+        info(f'wrote {filename}')
 
 def install_ssh_keys(val: bool) -> bool:
+    distro_spec = get_distro_spec()
+    ensure_package_installed(distro_spec.lastpass)
+
+    ssh_dirname = f"{HOME}/.ssh"
+    id_rsa_filename = f"{ssh_dirname}/id_rsa"
+    id_rsa_pub_filename = f"{id_rsa_filename}.pub"
     
-    warnings.warn("install_ssh_keys is a stub")
-    return False
+    # ensure ~/.ssh exists
+    if not os.path.isdir(ssh_dirname):
+        os.mkdir(ssh_dirname, mode=0o700)
+
+    if not lpass_is_logged_in():
+        lpass_login(LASTPASS_LOGIN) 
+
+    install_ssh_key(id_rsa_filename, LASTPASS_RSA_ID)
+    install_ssh_key(id_rsa_pub_filename, LASTPASS_RSA_PUB_ID)
+
+    return True
 
 
 def configure_nvim(val: bool) -> bool:
