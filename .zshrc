@@ -33,6 +33,10 @@ else
   export EDITOR='nvim'
 fi
 
+# Key bindings
+
+bindkey -e
+
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
