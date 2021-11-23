@@ -225,9 +225,6 @@
               "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:.*$"
               "\\)"))
 
-(setq deft-strip-summary-regexp "\\([
-        ]\\|^#\\+[[:upper:]_]+:.*$\\)")
-
 (advice-add 'deft-parse-title :override
             (lambda (file contents)
               (if deft-use-filename-as-title
