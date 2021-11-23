@@ -353,18 +353,8 @@
 
 (after! org
   (setq org-agenda-custom-commands
-        '(("c" "Non-exercise todos" tags-todo "-xz"
-           ((org-agenda-sorting-strategy '(priority-up effort-down))))
-          ;; ("h" "Habits" tags-todo "habit"
-          ;;  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
-          ("h" "Habits" tags-todo "STYLE=\"habit\"+SCHEDULED<=\"<today>\""
-           ((org-agenda-overriding-header "Habits")
-            (org-agenda-sorting-strategy
-             '(priority-down time-down todo-state-down
-                             effort-up category-keep))))
-          ("l" agenda*)
-          ("d" "Today-todos" tags-todo "today")
-          ))
+        '(("l" agenda*)
+          ("d" "Today-todos" tags-todo "today")))
   (setq org-attach-id-dir "org-attach/")
   (when IS-LINUX
     ;; ;; (push '("\\.pdf\\'" . "evince %s") org-file-apps)
