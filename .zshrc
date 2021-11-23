@@ -53,7 +53,7 @@ SSH_AUTH_SOCK=${SSH_AUTH_SOCK:-${XDG_RUNTIME_DIR}/ssh-agent.socket}
 DOOMDIR=${DOOMDIR:-${HOME}/emacs/doom.d/ke}
 
 if [[ -o interactive ]] ; then
-  if [ -f $SSH_AUTH_SOCK ] ; then
+  if [ -S $SSH_AUTH_SOCK ] ; then
     export SSH_AUTH_SOCK
     if ssh-add -l | grep "The agent has no identities" > /dev/null ; then
       ssh-add
