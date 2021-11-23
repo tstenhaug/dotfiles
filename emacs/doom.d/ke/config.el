@@ -212,18 +212,10 @@
   (setq deft-recursive t)
   (setq deft-strip-summary-regexp
         (concat "\\("
-                "^:.+:.*\n" ; any line with a :SOMETHING:
-                "\\|^#\\+.*\n" ; anyline starting with a #+
-;;                "\\|^\\*.+.*\n" ; anyline where an asterisk starts the line
+                "[\n\t]" ;; blank
+                "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
+                "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:.*$"
                 "\\)")))
-
-
-(setq deft-strip-summary-regexp
-      (concat "\\("
-              "[\n\t]" ;; blank
-              "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
-              "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:.*$"
-              "\\)"))
 
 (advice-add 'deft-parse-title :override
             (lambda (file contents)
