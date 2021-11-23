@@ -212,21 +212,10 @@
   (setq deft-recursive t)
   (setq deft-strip-summary-regexp
         (concat "\\("
-                "^:.+:.*\n" ; any line with a :SOMETHING:
-                "\\|^#\\+.*\n" ; anyline starting with a #+
-;;                "\\|^\\*.+.*\n" ; anyline where an asterisk starts the line
+                "[\n\t]" ;; blank
+                "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
+                "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:.*$"
                 "\\)")))
-
-
-(setq deft-strip-summary-regexp
-      (concat "\\("
-              "[\n\t]" ;; blank
-              "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
-              "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:.*$"
-              "\\)"))
-
-(setq deft-strip-summary-regexp "\\([
-        ]\\|^#\\+[[:upper:]_]+:.*$\\)")
 
 (advice-add 'deft-parse-title :override
             (lambda (file contents)
@@ -356,18 +345,8 @@
 
 (after! org
   (setq org-agenda-custom-commands
-        '(("c" "Non-exercise todos" tags-todo "-xz"
-           ((org-agenda-sorting-strategy '(priority-up effort-down))))
-          ;; ("h" "Habits" tags-todo "habit"
-          ;;  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
-          ("h" "Habits" tags-todo "STYLE=\"habit\"+SCHEDULED<=\"<today>\""
-           ((org-agenda-overriding-header "Habits")
-            (org-agenda-sorting-strategy
-             '(priority-down time-down todo-state-down
-                             effort-up category-keep))))
-          ("l" agenda*)
-          ("d" "Today-todos" tags-todo "today")
-          ))
+        '(("l" agenda*)
+          ("d" "Today-todos" tags-todo "today")))
   (setq org-attach-id-dir "org-attach/")
   (when IS-LINUX
     ;; ;; (push '("\\.pdf\\'" . "evince %s") org-file-apps)
