@@ -625,7 +625,7 @@
 ;; ** yasnippet
 
 (after! yasnippet
-  (setq +snippets-dir "~/ke/emacs/snippets/")
+  (setq +snippets-dir "~/emacs/snippets/")
   (map! :leader
         (:prefix ("y" . "yas")
          "e" #'+snippets/edit

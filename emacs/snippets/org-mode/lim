@@ -1,0 +1,4 @@
+# key: lim
+# name: lim
+# --
+lim_{${1:x}\to{}${2:a}}$0

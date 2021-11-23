@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: colvec
+# key: colvec
+# --
+\colvec{$1}{$2}{$3}$0

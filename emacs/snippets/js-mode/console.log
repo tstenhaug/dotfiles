@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: console.log
+# uuid: 
+# key: clg
+# condition: t
+# --
+console.log(\`$1\`);$0

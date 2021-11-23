@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: label with underscore
+# key: lu
+# --
+[label=<<u>$0</u>>]

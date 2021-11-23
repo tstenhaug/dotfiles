@@ -1,0 +1,7 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: clc
+# key: clc
+# --
+#+begin_src calc
+$0
+#+end_src

@@ -1,0 +1,7 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: algn
+# key: algn
+# --
+\begin{align}
+$0
+\end{align}

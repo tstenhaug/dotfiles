@@ -1,0 +1,7 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: pysrc 
+# key: pysrc 
+# --
+#+begin_src ipython :session ${1: :results ${2: output}}
+$0
+#+end_src

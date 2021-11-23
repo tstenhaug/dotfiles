@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: insert into
+# key: ii
+# --
+INSERT INTO $1 values ($0)

@@ -1,0 +1,7 @@
+# key: sys_exit
+# name: sys_exit
+# --
+## exit via sys_exit
+movq \$60, %rax  # 60 = sys_exit
+movq \$0, %rdi   # 0 = OK
+syscall

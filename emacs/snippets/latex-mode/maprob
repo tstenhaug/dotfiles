@@ -1,0 +1,9 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: maprob
+# --
+\section{$1}
+
+\subsection{Problem}
+$0
+\subsection{Løsning}
+

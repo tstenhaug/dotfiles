@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: trth
+# key: trth
+# --
+#+CAPTION: 
+| p | q |
+|---+---|
+| T | T |
+| T | F |
+| F | T |
+| F | F |

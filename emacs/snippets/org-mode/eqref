@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: eqref
+# key: eqr
+# --
+\eqref{$1} $0 

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: zply
+# key: zply
+# --
+ℤ_{${1:n}}[${2:x}]$0

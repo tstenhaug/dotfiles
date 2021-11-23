@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: envalph
+# key: envalph
+# --
+\begin{enumerate}[label=({\alph*})]
+$0
+\end{enumerate}

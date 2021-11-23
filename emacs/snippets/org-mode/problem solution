@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: problem solution
+# key: prso
+# --
+**** Problem
+
+$0
+
+**** Solution

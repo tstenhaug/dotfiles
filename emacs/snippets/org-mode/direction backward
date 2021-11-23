@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: direction backward
+# key: db
+# --
+dir=back

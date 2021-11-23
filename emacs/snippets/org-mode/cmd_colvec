@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: cmd_colvec
+# key: cmd_colvec
+# --
+
+#+LATEX_HEADER: \newcommand*\colvec[1]{\begin{bmatrix}#1\end{bmatrix}}

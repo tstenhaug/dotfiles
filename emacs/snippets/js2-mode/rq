@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: rq
+# uuid: 
+# key: rq
+# condition: t
+# --
+const $1 = require('$1');
+$0

@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: ltx
+# key: ltx
+# --
+#+LaTeX: $0

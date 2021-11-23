@@ -1,0 +1,45 @@
+# key: kesnohdr
+# name: kesnohdr
+# --
+* kesnohdr :noexport:ignore:
+#+OPTIONS: num:nil toc:nil author:nil title:nil
+#+LATEX_CLASS_OPTIONS: [a4paper]
+#+LATEX_HEADER: \usepackage{setspace}
+#+LATEX_HEADER: \usepackage{enumitem}
+#+LATEX_HEADER: \usepackage{gensymb}
+#+LATEX_HEADER: \usepackage{colortbl}
+#+LATEX_HEADER: \usepackage[usenames]{xcolor}
+#+LATEX_HEADER: \usepackage{libertine}
+#+LATEX_HEADER: \usepackage[libertine]{newtxmath}
+#+LATEX_HEADER: \usepackage[]{units}
+#+LATEX_HEADER: \usepackage{newunicodechar}
+#+LATEX_HEADER: \newcommand{\keunicodechar}[2]{\newunicodechar{#1}{\ensuremath{#2}}}
+#+LATEX_HEADER: \keunicodechar{¬}{\neg}
+#+LATEX_HEADER: \keunicodechar{∧}{\wedge}
+#+LATEX_HEADER: \keunicodechar{∨}{\vee}
+#+LATEX_HEADER: \keunicodechar{⇒}{\Rightarrow}
+#+LATEX_HEADER: \keunicodechar{⇔}{\Leftrightarrow}
+#+LATEX_HEADER: \keunicodechar{○}{\circ}
+#+LATEX_HEADER: \keunicodechar{≥}{\geq}
+#+LATEX_HEADER: \keunicodechar{≤}{\leq}
+#+LATEX_HEADER: \keunicodechar{²}{^2}
+#+LATEX_HEADER: \keunicodechar{∈}{\in}
+#+LATEX_HEADER: \keunicodechar{∃}{\exists}
+#+LATEX_HEADER: \keunicodechar{∀}{\forall}
+#+LATEX_HEADER: \keunicodechar{·}{\cdot}
+#+LATEX_HEADER: \keunicodechar{∫}{\int}
+#+LATEX_HEADER: \keunicodechar{∴}{\therefore}
+#+LATEX_HEADER: \keunicodechar{∵}{\because}
+#+LATEX_HEADER: \keunicodechar{≠}{\neq}
+#+LATEX_HEADER: \keunicodechar{∞}{\infty}
+#+LATEX_HEADER: \keunicodechar{δ}{\delta}
+#+LATEX_HEADER: \keunicodechar{ε}{\epsilon}
+#+LATEX_HEADER: \keunicodechar{√}{\sqrt}
+#+LATEX_HEADER: \keunicodechar{⊆}{\subseteq}
+#+LATEX_HEADER: \keunicodechar{⊂}{\subset}
+#+LATEX_HEADER: \keunicodechar{⊃}{\supset}
+#+LATEX_HEADER: \keunicodechar{⊇}{\supseteq}
+#+LATEX_HEADER: \keunicodechar{∅}{\emptyset}
+#+LATEX_HEADER: \keunicodechar{∩}{\cap}
+#+LATEX_HEADER: \keunicodechar{∪}{\cup}
+#+LATEX_HEADER: \keunicodechar{±}{\pm}

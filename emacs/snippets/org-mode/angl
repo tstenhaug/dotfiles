@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: angl
+# key: angl
+# --
+\angle{}$0 

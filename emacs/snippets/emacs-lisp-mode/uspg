@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: uspg
+# key: uspg
+# --
+(use-package $1
+  :bind ()
+  :init
+  :config)
