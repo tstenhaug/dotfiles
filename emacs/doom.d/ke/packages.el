@@ -55,16 +55,10 @@
 ;; work correctly.
 
 (package! graphviz-dot-mode)
-;; (package! org-download :pin "a367669384859261bcb11bac4b782f231f972353")
-(package! outshine)
-(package! ox-reveal)
 (package! lorem-ipsum)
-;; (package! xah-math-input)
-(package! org-noter)
 (package! jest)
 (package! pdfgrep
   :recipe (:host github :repo "jeremy-compostella/pdfgrep"))
-(package! writeroom-mode)
 (package! solaire-mode :disable t)
 (package! i3wm-config-mode
   :recipe (:host github :repo "Alexander-Miller/i3wm-Config-Mode"))

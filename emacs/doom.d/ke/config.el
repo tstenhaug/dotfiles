@@ -454,7 +454,6 @@
 ;;            (funcall org-download-abbreviate-filename-function filename))))
 
 
-(use-package! org-noter)
 
 ;; ** org-journal
 
