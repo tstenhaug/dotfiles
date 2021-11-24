@@ -98,9 +98,9 @@
   (ediff-files (concat doom-private-dir "init.el")
                (concat doom-emacs-dir "init.example.el")))
 
-(define-key! help-map
-  "di"   #'doom/ediff-init-and-example
-  )
+; (define-key! help-map
+;   "di"   #'doom/ediff-init-and-example
+;   )
 
 ;; * Hydras
 
@@ -466,12 +466,6 @@
 (after! org-roam
   (setq org-roam-directory "~/df/roam"))
 
-;; ** outshine
-
-(use-package! outshine
-  :config
-  (add-hook 'emacs-lisp-mode-hook #'outshine-mode t))
-
 ;; ** ox-latex
 
 (after! ox-latex
@@ -487,11 +481,6 @@
                                         ; (tt-family)
           ("" "minted" t)))
   (setq org-latex-pdf-process '("latexmk -g -pdf -pdflatex=\"%latex\" --shell-escape -outdir=%o %f")))
-
-;; ** ox-reveal
-
-(use-package! ox-reveal)
-
 
 ;; ** pdf-tools
 
@@ -592,13 +581,6 @@
         :localleader
         "," #'with-editor-finish
         "k" #'with-editor-cancel))
-
-;; ** writeroom-mode
-
-(use-package! writeroom-mode
-  :config
-  (map! :leader
-        "t W" #'writeroom-mode))
 
 ;; ** yasnippet
 
