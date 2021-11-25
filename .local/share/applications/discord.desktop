@@ -3,7 +3,7 @@ Name=Discord (NVidia)
 StartupWMClass=discord
 Comment=All-in-one voice and text chat for gamers that's free, secure, and works on both your desktop and phone.
 GenericName=Internet Messenger
-Exec=/usr/share/discord/Discord --use-gl=egl
+Exec=Discord --use-gl=egl
 Icon=discord
 Type=Application
 Categories=Network;InstantMessaging;
