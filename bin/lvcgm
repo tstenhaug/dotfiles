@@ -1,0 +1,119 @@
+#!/usr/bin/env zsh
+
+
+echo
+echo "[l]ib[v]irt [c]entos [g]uest [m]anager"
+echo
+
+script_dir=$(dirname $0)
+iso_url="http://mirrors.dotsrc.org/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-dvd1.iso"
+iso_directory=~/.cache/lvcgm
+iso_filename="CentOS-Stream-8-x86_64-latest-dvd1.iso"
+ks_cfg_filename="lvcgm-ks.cfg"
+default_guest_name=centos-stream-8
+
+memory=4096
+vcpus=1
+disk_size=10
+os_variant="centos-stream8"
+
+usage() {
+    echo "Usage: $0 <create|clone>"
+}
+
+# set `command` variable to either "create" or "clone", or exit with failure
+acquire_command() {
+    case "$1" in
+        create)
+            command=create
+            ;;
+        clone)
+            command=clone
+            ;;
+        *)
+            usage
+            exit 1
+    esac
+}
+
+acquire_guest_name() {
+    echo -en "Base guest name: (enter for $default_guest_name)"
+    read guest_name
+    guest_name=${guest_name:-$default_guest_name}
+}
+
+acquire_clone_name() {
+    while [ "$clone_name" = "" ] ; do
+      echo -en "Clone guest name: "
+      read clone_name
+    done
+}
+
+acquire_iso_path() {
+    iso_path=${iso_path:-"$iso_directory/$iso_filename"}
+    if [ ! -f $iso_path ] ; then
+        echo -n "${iso_path} does not exist, try to download from default url? (y/N): "
+        read -q ans
+        if [ "$ans" = "y" ] ; then
+            mkdir -p $iso_directory
+            wget -O "$iso_path" "$iso_url" || exit 1
+        else
+            echo "Bye."
+            exit 1
+        fi
+    fi
+}
+
+acquire_ks_cfg_path() {
+    ks_cfg_path="$script_dir/$ks_cfg_filename"
+    if [ ! -f "$ks_cfg_path" ] ; then
+        echo "Can't find $ks_cfg_path, bailing"
+        exit 1
+    fi
+}
+
+create() {
+    virt-install \
+        --name ${guest_name:?} \
+        --memory=${memory:?} \
+        --vcpus=${vcpus:?} \
+        --location ${iso_path:?} \
+        --disk size=${disk_size:?}  \
+        --network network=default \
+        --graphics=none \
+        --noreboot \
+        --os-variant=${os_variant:?} \
+        --console pty,target_type=serial \
+        --initrd-inject ${ks_cfg_path:?} --extra-args "inst.ks=file:/${ks_cfg_filename} console=tty0 console=ttyS0,115200n8"
+}
+
+clone() {
+    virt-clone \
+        --original ${guest_name:?} \
+        --name ${clone_name:?} \
+        --file /var/lib/libvirt/images/${clone_name:?}.qcow2
+    sudo virt-sysprep \
+        -d ${clone_name} \
+        --operations "-ssh-userdir" \
+        --hostname ${clone_name}.localdomain
+}
+
+
+acquire_command $1
+
+case ${command:?} in
+    create)
+        acquire_guest_name
+        acquire_iso_path
+        acquire_ks_cfg_path
+        create
+        ;;
+    clone)
+        acquire_guest_name
+        acquire_clone_name
+        clone
+        ;;
+    *)
+        echo "Script error"
+        exit 1
+esac

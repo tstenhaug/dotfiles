@@ -1,0 +1,30 @@
+#!/usr/bin/env zsh
+
+doit() {
+	local emacsd=""
+	local doomd=""
+
+	while [ "$emacsd" = "" ] ; do 
+		echo "[v]anilla-doom    [k]e-doom"
+		echo 
+		echo -n "run doom for which setup? "
+		read -k 1 ans
+		case "$ans" in
+			v)
+				echo "Using vanilla doom"
+				emacsd=~/emacs/emacs.d/vanilla-doom
+				doomd=~/emacs/doom.d/vanilla
+				;;
+			k)
+				echo "Using ke-doom"
+				emacsd=~/emacs/emacs.d/ke-doom
+				doomd=~/emacs/doom.d/ke
+				;;
+		esac
+	done
+
+	DOOMDIR=$doomd $emacsd/bin/doom $*
+}
+
+doit $*
+
