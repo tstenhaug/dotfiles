@@ -11,7 +11,7 @@ setopt appendhistory
 
 export LIBVIRT_DEFAULT_URI="qemu:///system"
 
-ZINIT_HOME=~/share/zinit/zinit.git
+ZINIT_HOME=~/.local/share/zinit/zinit.git
 source "$ZINIT_HOME/zinit.zsh"
 
 # Load powerlevel10k theme
