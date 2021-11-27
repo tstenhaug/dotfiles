@@ -120,7 +120,7 @@ ensure_element_is_installed() {
 
 # ensure_pip_module <module>
 ensure_pip_module() {
-    if ! ${python_command:?} -c "import $1" &> /dev/null ; then
+    if ! ${pip_command:?} show $1 &> /dev/null ; then
         $pip_command install --user $1
     fi
 }
