@@ -78,6 +78,7 @@ create() {
         --memory=${memory:?} \
         --vcpus=${vcpus:?} \
         --location ${iso_path:?} \
+        --cdrom /dev/sr0 \
         --disk size=${disk_size:?}  \
         --network network=default \
         --graphics=none \
