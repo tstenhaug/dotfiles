@@ -357,6 +357,7 @@
         (plist-put org-format-latex-options :scale 1.8))
   (setq org-id-link-to-org-use-id t)
   (setq org-list-allow-alphabetical t)
+  (setq org-log-into-drawer t)
   (setq org-pretty-entities t)
   (setq org-preview-latex-default-process 'dvisvgm)
   (setq org-startup-folded t)
