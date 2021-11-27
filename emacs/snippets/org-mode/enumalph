@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: enumalph
+# key: enumalph
+# --
+#+ATTR_LATEX: :environment enumerate :options [label=\textbf{\alph*})]

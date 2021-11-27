@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: trutab
+# key: trutab
+# --
+| p | q |
+|---+---|
+| T | T |
+| T | F |
+| F | T |
+| F | F |

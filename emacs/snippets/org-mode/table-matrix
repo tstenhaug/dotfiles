@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: table-matrix 
+# key: mtrx
+# --
+
+#+ATTR_LATEX: :mode math :environment bmatrix ${1::math-prefix ${2:B=}}
+|$0| | 

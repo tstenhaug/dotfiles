@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: epilogue
+# key: epi
+# --
+        ## function epilogue
+	movq %rbp, %rsp
+	pop %rbp
+	ret

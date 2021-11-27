@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+
+import sys
+import yaml
+from jinja2 import Environment, FileSystemLoader
+
+def usage():
+    print("""Usage: jinja <template-filename> <data>""")
+
+if (len(sys.argv) < 3):
+    usage()
+    exit(1)
+
+template_name=sys.argv[1]
+data_filename=sys.argv[2]
+
+env = Environment(loader=FileSystemLoader(['.', './templates']),
+                  lstrip_blocks=True,
+                  trim_blocks=True)
+template = env.get_template(template_name)
+data = yaml.load(open(data_filename).read(), Loader=yaml.Loader)
+print(template.render(**data))

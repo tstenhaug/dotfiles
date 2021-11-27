@@ -4,3 +4,6 @@
 [submodule "emacs/emacs.d/vanilla-doom"]
 	path = emacs/emacs.d/vanilla-doom
 	url = https://github.com/hlissner/doom-emacs
+[submodule ".local/share/zinit/zinit.git"]
+	path = .local/share/zinit/zinit.git
+	url = https://github.com/zdharma-continuum/zinit.git

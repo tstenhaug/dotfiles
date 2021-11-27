@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: direction forward
+# key: df
+# --
+dir=forward

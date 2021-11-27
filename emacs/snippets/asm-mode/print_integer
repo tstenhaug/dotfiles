@@ -1,0 +1,57 @@
+# key: print_integer
+# name: print_integer
+# --
+########################################################################
+###  FUNCTION print_integer
+###  IN:      %rdi - integer to print
+########################################################################
+print_integer:
+	# function prolog
+	push %rbp
+	movq %rsp, %rbp
+
+	# pushing all registers we're using on stack
+	push %rax
+	push %rcx
+	push %rdx
+	push %rdi
+	push %rsi
+	push %r9
+
+	push \$10               # put '\n' on the stack
+        movq \$1, %r9           # account for the extra character
+        movq %rdi, %rax        # using %rax for idivq
+
+print_integer_loop_1:
+        xor %rdx, %rdx
+	movq \$10, %rcx
+	idivq %rcx             # rdx:rax/%rcx -> div in %rax, rem in %rdx
+	addq \$48, %rdx         # add 48 to remainder to get corresponding ASCII
+	push %rdx              # push ASCII for decimal on stack
+	inc %r9
+	cmpq \$0, %rax   
+	jne print_integer_loop_1
+
+print_integer_loop_2:
+	movq \$1, %rax          # 1 = sys_write
+	movq \$1, %rdi          # 1 = stdout
+	movq %rsp, %rsi        #  char* buffer (rsp points to the current char to write)
+	movq \$1, %rdx          # size_t count (we write one char at a time)
+	syscall
+	addq \$8, %rsp          # set stack pointer to next char
+	addq \$-1, %r9
+	jne print_integer_loop_2
+
+	# restore the previously saved registers
+	pop %r9
+	pop %rsi
+	pop %rdi
+	pop %rdx
+	pop %rcx
+	pop %rax
+
+	# function epilog
+	movq %rbp, %rsp
+	pop %rbp
+	ret
+ 

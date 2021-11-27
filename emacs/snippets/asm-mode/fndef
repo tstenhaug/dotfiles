@@ -1,0 +1,35 @@
+# -*- mode: snippet -*-
+# name: fndef
+# key: fndef
+# --
+        /******************************************************************
+         ${1:fname} - $0
+         
+         INPUT
+         
+            %rdi -
+            %rsi -
+            %rdx -
+        
+         OUTPUT
+         
+            %rax -
+        
+         REGISTERS
+        
+           TODO
+
+         DESCRIPTION
+
+           TODO
+        *******************************************************************/
+        .type $1, @function
+$1:
+        ## function prologue
+	pushq %rbp
+	movq %rsp, %rbp
+
+        ## function epilogue
+	movq %rbp, %rsp
+	pop %rbp
+	ret

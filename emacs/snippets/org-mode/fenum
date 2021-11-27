@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: fenum
+# key: fenum
+# comment: Fake enum, for having bolded, enum like "headers"
+# --
+*$1)* $0

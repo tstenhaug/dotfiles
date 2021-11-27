@@ -1,0 +1,5 @@
+# key: dvex
+# name: dfa-vertex
+# condition: t
+# --
+$1 -> $2  [ label = "$3" ];$0

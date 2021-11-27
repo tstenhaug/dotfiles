@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: atrw
+# key: atrw
+# --
+#+ATTR_ORG: :width $0

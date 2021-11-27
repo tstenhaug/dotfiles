@@ -98,9 +98,9 @@
   (ediff-files (concat doom-private-dir "init.el")
                (concat doom-emacs-dir "init.example.el")))
 
-(define-key! help-map
-  "di"   #'doom/ediff-init-and-example
-  )
+; (define-key! help-map
+;   "di"   #'doom/ediff-init-and-example
+;   )
 
 ;; * Hydras
 
@@ -173,6 +173,7 @@
 
 ;; ** deft
 
+
 (defun ke-deft-strip-quotes (str)
   (cond ((string-match "\"\\(.+\\)\"" str) (match-string 1 str))
         ((string-match "'\\(.+\\)'" str) (match-string 1 str))
@@ -207,7 +208,27 @@
            (apply orig args)))))))
 
 (after! deft
-  (setq deft-directory "~/df/roam"))
+  (setq deft-directory "~/df/roam")
+  (setq deft-recursive t)
+  (setq deft-strip-summary-regexp
+        (concat "\\("
+                "[\n\t]" ;; blank
+                "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
+                "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:.*$"
+                "\\)")))
+
+(advice-add 'deft-parse-title :override
+            (lambda (file contents)
+              (if deft-use-filename-as-title
+                  (deft-base-filename file)
+                (let* ((case-fold-search 't)
+                       (begin (string-match "#\\+title: " contents))
+                       (end-of-begin (match-end 0))
+                       (end (string-match "\n" contents begin)))
+                  (if begin
+                      (substring contents end-of-begin end)
+                    (format "%s" file))))))
+
 
 ;; ** evil
 
@@ -324,18 +345,8 @@
 
 (after! org
   (setq org-agenda-custom-commands
-        '(("c" "Non-exercise todos" tags-todo "-xz"
-           ((org-agenda-sorting-strategy '(priority-up effort-down))))
-          ;; ("h" "Habits" tags-todo "habit"
-          ;;  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
-          ("h" "Habits" tags-todo "STYLE=\"habit\"+SCHEDULED<=\"<today>\""
-           ((org-agenda-overriding-header "Habits")
-            (org-agenda-sorting-strategy
-             '(priority-down time-down todo-state-down
-                             effort-up category-keep))))
-          ("l" agenda*)
-          ("d" "Today-todos" tags-todo "today")
-          ))
+        '(("l" agenda*)
+          ("d" "Today-todos" tags-todo "today")))
   (setq org-attach-id-dir "org-attach/")
   (when IS-LINUX
     ;; ;; (push '("\\.pdf\\'" . "evince %s") org-file-apps)
@@ -443,7 +454,6 @@
 ;;            (funcall org-download-abbreviate-filename-function filename))))
 
 
-(use-package! org-noter)
 
 ;; ** org-journal
 
@@ -455,12 +465,6 @@
 ;;
 (after! org-roam
   (setq org-roam-directory "~/df/roam"))
-
-;; ** outshine
-
-(use-package! outshine
-  :config
-  (add-hook 'emacs-lisp-mode-hook #'outshine-mode t))
 
 ;; ** ox-latex
 
@@ -477,11 +481,6 @@
                                         ; (tt-family)
           ("" "minted" t)))
   (setq org-latex-pdf-process '("latexmk -g -pdf -pdflatex=\"%latex\" --shell-escape -outdir=%o %f")))
-
-;; ** ox-reveal
-
-(use-package! ox-reveal)
-
 
 ;; ** pdf-tools
 
@@ -583,17 +582,10 @@
         "," #'with-editor-finish
         "k" #'with-editor-cancel))
 
-;; ** writeroom-mode
-
-(use-package! writeroom-mode
-  :config
-  (map! :leader
-        "t W" #'writeroom-mode))
-
 ;; ** yasnippet
 
 (after! yasnippet
-  (setq +snippets-dir "~/ke/emacs/snippets/")
+  (setq +snippets-dir "~/emacs/snippets/")
   (map! :leader
         (:prefix ("y" . "yas")
          "e" #'+snippets/edit

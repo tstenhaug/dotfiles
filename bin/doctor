@@ -1,179 +1,549 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env python3
 
-DATA="${XDG_DATA_HOME:-$HOME/.local/share}"
-CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}"
+# doctor -- diagnose and fix Karvus Environment as described by configuration.
 
-FISH_LOCATION="/usr/bin/fish"
-LASTPASS_LOGIN="karvus@gmail.com"
-LASTPASS_RSA_ID="2551172036"
-LASTPASS_RSA_PUB_ID="2551170726"
-REPO_HTTPS="https://github.com/tstenhaug/dotfiles.git"
-REPO_GIT="git@github.com:tstenhaug/dotfiles.git"
-NVIM_VIM_PLUG_URL='https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-NVIM_VIM_PLUG_LOCATION="${DATA}/nvim/site/autoload/plug.vim"
+import argparse
+import dataclasses
+import os
+import platform
+import subprocess
+import sys
+from typing import cast, Any, Callable, Literal
+import warnings
+import yaml
+import xdg
+import voluptuous
 
-# try to figure out which distro we're on
-determine_distro() {
-    if [ -e /etc/arch-release ] ; then
-        distro=arch
-    else if [ -f  /etc/system-release ] && egrep "CentOS|Fedora" /etc/system-release &> /dev/null ; then
-             distro=rhel_like
-         else
-             distro=unknown
-         fi
-    fi
-    info "Determined distro: ${distro}"
-}
+if platform.system() != "Linux":
+    sys.exit("doctor currently only works on Linux systems")
 
-# set_distro_vars <distro>
-set_distro_vars() {
-    case "$1" in
-       arch)
-         install_command="sudo pacman -S"
-         query_command="pacman -Q"
-         fish_package="fish"
-		 neovim_package="neovim"
-         lastpass_package="lastpass-cli"
-         ;;
-       rhel_like) 
-           install_command="sudo dnf install"
-           query_command="dnf list installed"
-           fish_package="fish"
-		   neovim_package="neovim.x86_64"
-           lastpass_package="lastpass-cli.x86_64"
-           ;;
-       unknown)
-           info "Unknown distro, will not be able to install packages"
-           ;;
-       *)
-           error "Distro has been determined, but variables for it not defined"
-    esac
-}
+# * Constants
 
-# info <message>
-info() {
-    echo DOC: $*
-}
+ZSH_LOCATION = "/usr/bin/zsh"
+LASTPASS_LOGIN = "karvus@gmail.com"
+LASTPASS_RSA_ID = "2551172036"
+LASTPASS_RSA_PUB_ID = "2551170726"
+REPO_HTTPS = "https://github.com/tstenhaug/dotfiles.git"
+REPO_GIT = "git@github.com:tstenhaug/dotfiles.git"
+CONFIG_FILENAME = f"{xdg.xdg_config_home()}/ke/doctor.yml"
+HOME = os.path.expanduser("~")
 
-# error <message>
-error() {
-    echo "DOC-ERR: $*"
-    exit 1
-}
+# ** Distro constants
 
-is_ssh_keys_installed() {
-    if [ -d ~/.ssh ]  && [ -e ~/.ssh/id_rsa ] && [ -e ~/.ssh/id_rsa.pub ] ; then
-        return 0
-    else
-        return 1
- fi
-}
-
-is_fish_installed() {
-    command -v fish &> /dev/null
-}
-
-is_fish_my_shell() {
-    [ $(grep $USER /etc/passwd | cut -d : -f 7) = $FISH_LOCATION ] 
-}
-
-is_nvim_installed() {
-    command -v nvim &> /dev/null
-}
-
-# extract id_rsa and id_rsa.pub from my lastpass account
-extract_ssh_keys() {
-    if ! [ -d ~/.ssh ] ; then
-        info "~/.ssh missing, creating and chmoding"
-        mkdir ~/.ssh
-        chmod 700 ~/.ssh
-    fi
-    if ! lpass info | grep "Logged in as $LASTPASS_LOGIN" &> /dev/null
-    then
-        lpass login "${LASTPASS_LOGIN}"
-    fi
-    lpass show --notes ${LASTPASS_RSA_ID} > ~/.ssh/id_rsa
-    chmod 600 ~/.ssh/id_rsa
-    lpass show --notes ${LASTPASS_RSA_PUB_ID} > ~/.ssh/id_rsa.pub
-    info "SSH keys extracted"
-}
-
-# install_package <package_name>
-install_package() {
-    package_name=$1
-   if [ "${install_command}" = "" ] ; then
-        error "No install command set"
-    fi
-    if [ "${package_name}" = "" ] ; then
-        error "$0: no package name supplied"
-    fi
-    eval $install_command $package_name
-}
-
-# main
-
-determine_distro
-set_distro_vars ${distro}
-
-if ! command -v git &> /dev/null ; then
-    error "git not installed"
-fi
-
-if ! command -v ssh &> /dev/null ; then
-    error "ssh not installed"
-fi
-
-if ! is_ssh_keys_installed ; then
-    info SSH-keys not installed, trying to extract with lastpass
-    if ! which lpass &> /dev/null ; then
-        if install_package ${lastpass_package} ; then
-            extract_ssh_keys
-        fi
-    else
-        extract_ssh_keys
-    fi
-else
-    info SSH keys already installed
-fi
-
-# if yadm repo origin is https, switch to git
-if yadm remote get-url origin | grep ${REPO_HTTPS} &> /dev/null ; then
-    info "YADM repo is tracking the HTTPS url, changing to git"
-    yadm remote set-url origin ${REPO_GIT}
-else
-    info "YADM repo is tracking the git url"
-fi
-
-if is_fish_installed ; then
-    info "fish already installed"
-else
-    info "fish not installed, trying to install"
-    install_package ${fish_package}
-fi
-
-if is_fish_my_shell ; then
-    info "fish is my shell"
-else
-    info "fish is not my shell, changing"
-    chsh -s /usr/bin/fish
-fi
-
-if is_nvim_installed ; then
-	info "Neovim is installed"
-else
-    info "Neovim is not installed, rectifying"
-	install_package ${neovim_package}
-fi
-
-if test -e "${NVIM_VIM_PLUG_LOCATION}"  ; then
-	info "Neovim: vim-plug is installed"
-else
-	info "Neovim: vim-plug is not installed, rectifying"
-	curl -fLo "${NVIM_VIM_PLUG_LOCATION}" --create-dirs "${NVIM_VIM_PLUG_URL}" 
-fi
-
-info "Neovim: installing plugins"
-nvim --headless -c PlugInstall -c q! -c q! 2> /dev/null
+@dataclasses.dataclass
+class Package:
+    """A command, and the distro-package in which it is found."""
+    command: str
+    package_name: str
 
 
+DistroCmd = list[str]
 
+
+@dataclasses.dataclass
+class DistroSpec:
+    """Specification for a distro for which we can install packages."""
+    install_command: DistroCmd
+    query_command: DistroCmd
+    lastpass: Package
+    zsh: Package
+
+
+Distroname = Literal["archlinux", "fedora"]
+
+
+def get_distro_specs() -> dict[Distroname, DistroSpec]:
+    return {
+        "archlinux":
+        DistroSpec(
+            install_command=["sudo", "pacman", "-S"],
+            query_command=["pacman", "-Q"],
+            lastpass=Package(command="lpass", package_name="lastpass-cli"),
+            zsh=Package(command="zsh", package_name="zsh"),
+        ),
+        "fedora":
+        DistroSpec(
+            install_command=["sudo", "dnf", "install"],
+            query_command=["dnf", "list", "installed"],
+            lastpass=Package(command="lpass", package_name="lastpass-cli"),
+            zsh=Package(command="zsh", package_name="zsh"),
+        ),
+    }
+
+def get_distro_spec() -> DistroSpec:
+    distro_id = read_os_relase()['ID']
+    distro_specs = get_distro_specs()
+    if not distro_id in distro_specs.keys():
+        error(f"unknown distro: {distro_id} -- doctor must be extended to work here")
+        exit(1)
+    else:
+        return distro_specs[cast(Distroname, distro_id)]
+
+# * Configuration
+
+# ** Configuration elements
+
+ConfigurableName = Literal["ssh-keys"]
+
+
+@dataclasses.dataclass
+class Configurable:
+    """Represents an element of KE that can be handled by doctor."""
+    description: str
+    ask_for_value: Callable[[str], Any]
+    diagnose: Callable[[Any], bool]
+    apply: Callable[[Any], bool]
+    schema_validator: Any  # TODO this should be a constructor
+
+
+def get_config_elements() -> dict[ConfigurableName, Configurable]:
+    return {
+        "ssh-keys":
+        Configurable(
+            description="Install default SSH private and public RSA keys",
+            ask_for_value=ask_yn,
+            diagnose=diagnose_ssh_keys,
+            apply=install_ssh_keys,
+            schema_validator=bool,
+        )
+    }
+
+
+# ** Config
+
+Config = dict[ConfigurableName, Any]
+
+def get_config_schema() -> voluptuous.Schema:
+    schema = voluptuous.Schema({
+        key: elt.schema_validator for key, elt in get_config_elements().items()
+    })
+    return schema
+
+# * Diagnostic
+
+
+def diagnose_ssh_keys(config_value: bool) -> bool:
+    """Check that ssh configuration exists and have correct permissions."""
+    ssh = f"{HOME}/.ssh"
+    id_rsa = f"{ssh}/id_rsa"
+    id_rsa_pub = f"{id_rsa}.pub"
+    if not check_file(ssh, 0o700, exist_test=os.path.isdir):
+        return False
+    else:
+        return check_file(id_rsa, 0o600) and check_file(id_rsa_pub, 0o600)
+
+
+def diagnose_nvim(config_value: bool):
+    warnings.warn("diagnose_nvim is a stub")
+
+
+def diagnose_against_config(config: Config) -> None:
+    """Run diagnostics for all configured elements."""
+    elements = get_config_elements()
+    info("running diagnostics against current configuration")
+    for config_id, config_value in config.items():
+        if not config_value:
+            info(f"{config_id}: skipping")
+        else:
+            elt = elements[config_id]
+            info(f"=== {config_id} ===")
+            elt.diagnose(config_value)
+
+
+# * Applicators -- functions that apply configuration elements
+
+def lpass_is_logged_in() -> bool:
+    cp = subprocess.run(['lpass', 'status'], capture_output=True)
+    return cp.stdout.startswith(b'Logged in')
+
+def lpass_login(login: str) -> bool:
+    while True:
+      cp = subprocess.run(['lpass', 'login', login])
+      if cp.returncode == 0:
+          return True
+
+def lpass_get_note(note_id: str) -> str:
+    cp = subprocess.run(['lpass', 'show', '--notes', note_id], capture_output=True)
+    if cp.returncode != 0:
+        error(f'failed to get {note_id} from lastpass')
+        error(str(cp.stderr))
+        exit(1)
+    else:
+        return cp.stdout.decode('ascii')
+
+def install_ssh_key(filename: str, key_id: str):
+    if os.path.isfile(filename):
+        info(f'{filename} already exists, skipping')
+    else:
+        id_rsa = lpass_get_note(key_id) 
+        with open(filename, 'w') as file:
+            file.write(id_rsa)
+        os.chmod(filename, 0o600)
+        info(f'wrote {filename}')
+
+def install_ssh_keys(val: bool) -> bool:
+    distro_spec = get_distro_spec()
+    ensure_package_installed(distro_spec.lastpass)
+
+    ssh_dirname = f"{HOME}/.ssh"
+    id_rsa_filename = f"{ssh_dirname}/id_rsa"
+    id_rsa_pub_filename = f"{id_rsa_filename}.pub"
+    
+    # ensure ~/.ssh exists
+    if not os.path.isdir(ssh_dirname):
+        os.mkdir(ssh_dirname, mode=0o700)
+
+    if not lpass_is_logged_in():
+        lpass_login(LASTPASS_LOGIN) 
+
+    install_ssh_key(id_rsa_filename, LASTPASS_RSA_ID)
+    install_ssh_key(id_rsa_pub_filename, LASTPASS_RSA_PUB_ID)
+
+    return True
+
+
+def configure_nvim(val: bool) -> bool:
+    warnings.warn("configure_nvim is a stub")
+    return False
+
+
+# * Prompters (askers)
+
+
+def ask_yn(prompt: str):
+    while True:
+        ans = input(prompt + " (y/n) ")
+        if ans in ["y", "n"]:
+            return ans == "y"
+
+
+# * Validation
+
+# * Printers
+
+ANSI_GREEN = "\u001b[32m"
+ANSI_RED = "\u001b[31m"
+ANSI_YELLOW = "\u001b[33m"
+ANSI_RESET = "\u001b[0m"
+
+
+def info(msg: str, newline: bool = True):
+    print(f"{ANSI_GREEN}DOCTOR{ANSI_RESET}:", msg, end="\n" if newline else "")
+
+
+def warn(msg: str):
+    print(f"{ANSI_YELLOW}DOCTOR-WARNING{ANSI_RESET}:", msg, file=sys.stderr)
+
+
+def error(msg: str):
+    print(f"{ANSI_RED}DOCTOR-ERROR{ANSI_RESET}:", msg, file=sys.stderr)
+
+
+# * Commands
+
+
+def ask_config() -> Config:
+    """Prompt for values for all configuration elements."""
+    config: dict[ConfigurableName, Any] = {}
+    for key, elt in get_config_elements().items():
+        config[key] = elt.ask_for_value(elt.description)
+    validate_or_die(config)
+    return config
+
+
+def apply_config(config: Config):
+    """Apply configuration elements to the system."""
+    elements = get_config_elements()
+    for key, config_value in config.items():
+        elements[key].apply(config_value)
+
+
+# * Helpers
+
+def is_package_installed(package: Package) -> bool:
+    spec: DistroSpec = get_distro_spec()
+    cp = subprocess.run(spec.query_command + [ package.package_name]) 
+    return cp.returncode == 0
+
+
+def install_package(package: Package) -> bool:
+    spec = get_distro_spec()
+    cp = subprocess.run(spec.install_command + [ package.package_name])
+    return cp.returncode == 0
+
+
+def ensure_package_installed(package: Package) -> bool:
+    if is_package_installed(package):
+        info(f"package {package.package_name} is installed")
+        return True
+    else:
+        info(f"package {package.package_name} is not installed, fixing")
+        return install_package(package)
+        
+def read_os_relase() -> dict[str, str]:
+    """Read /etc/os-release and return its contents as a dict."""
+    with open("/etc/os-release") as file:
+        os_release: dict[str, str] = {}
+        for line in file:
+            k, v = line.rstrip().split("=")
+            os_release[k] = v.strip('"')
+        return os_release
+
+
+def validate_or_die(config: Any) -> Config:
+    schema = get_config_schema()
+    try:
+        schema(config)
+    except voluptuous.Invalid as e:
+        error('invalid config: {config}')
+        error(str(e))
+        exit(1)
+    return config 
+
+def load_config(config_file: str) -> Config:
+    if not os.path.isfile(config_file):
+        error("config file not found; try running doctor with --configure")
+        exit(1)
+    else:
+        with open(config_file) as file:
+            config = cast(Any, yaml).load(file, Loader=yaml.FullLoader)
+            validate_or_die(config)
+            return config
+
+
+def write_config(config: Config, filename: str = CONFIG_FILENAME) -> bool:
+    info(f"writing config to {filename}")
+    dirname = os.path.dirname(filename)
+    if not os.path.isdir(dirname):
+        os.makedirs(dirname)
+    with open(filename, "w") as file:
+        file.write(cast(Any, yaml).dump(config))
+    return True
+
+
+def mod(filename: str):
+    """Return the access ("mod") bits of filename."""
+    return os.stat(filename).st_mode & 0o777
+
+
+def check_file(filename: str,
+               permissions: int,
+               exist_test: Callable[[str], bool] = os.path.isfile) -> bool:
+    """Check if file exists and have correct permissions."""
+    if not exist_test(filename):
+        warn(f"{filename} is missing")
+    else:
+        if mod(filename) != permissions:
+            warn(f"{filename} exists but have incorrect permissions")
+        else:
+            info(f"{filename} exists and have correct permissions")
+            return True
+    return False
+
+
+# * Argument parsing
+
+
+def get_parser():
+    parser = argparse.ArgumentParser(
+        description=
+        "Diagnose and fix Karvus Environment as described by configuration.")
+    parser.add_argument(
+        "--configure",
+        dest="configure",
+        action="store_true",
+        help="invoke configuration wizard",
+    )
+    parser.add_argument("--apply",
+                        dest="apply",
+                        action="store_true",
+                        help="apply configuration")
+    return parser
+
+
+# * Main
+
+if __name__ == "__main__":
+
+    args = get_parser().parse_args()
+
+    if args.configure:
+        config = ask_config()
+        write_config(config)
+    else:
+        config = load_config(CONFIG_FILENAME)
+
+    diagnose_against_config(config)
+
+    if args.apply:
+        apply_config(config)
+
+# # try to figure out which distro we're on
+# determine_distro() {
+#     if [ -e /etc/arch-release ] ; then
+#         distro=arch
+#     else if [ -f  /etc/system-release ] && egrep "CentOS|Fedora" /etc/system-release &> /dev/null ; then
+#              distro=rhel_like
+#          else
+#              distro=unknown
+#          fi
+#     fi
+#     info "Determined distro: ${distro}"
+# }
+
+# # set_distro_vars <distro>
+# set_distro_vars() {
+#     case "$1" in
+#        arch)
+#          install_command="sudo pacman -S"
+#          query_command="pacman -Q"
+#          zsh_package="zsh"
+# 		 neovim_package="neovim"
+#          lastpass_package="lastpass-cli"
+#          ;;
+#        rhel)
+#            install_command="sudo dnf install"
+#            query_command="dnf list installed"
+#            python_package="python39"
+#            zsh_package="zsh"
+# 		   neovim_package="neovim.x86_64"
+#            lastpass_package="lastpass-cli.x86_64"
+#            ;;
+#        unknown)
+#            info "Unknown distro, will not be able to install packages"
+#            ;;
+#        *)
+#            error "Distro has been determined, but variables for it not defined"
+#     esac
+# }
+
+# # info <message>
+# info() {
+#     echo DOC: $*
+# }
+
+# # error <message>
+# error() {
+#     echo "DOC-ERR: $*"
+#     exit 1
+# }
+
+# is_ssh_keys_installed() {
+#     if [ -d ~/.ssh ]  && [ -e ~/.ssh/id_rsa ] && [ -e ~/.ssh/id_rsa.pub ] ; then
+#         return 0
+#     else
+#         return 1
+#  fi
+# }
+
+# is_zsh_installed() {
+#     command -v zsh &> /dev/null
+# }
+
+# is_zsh_my_shell() {
+#     [ $(grep $USER /etc/passwd | cut -d : -f 7) = $ZSH_LOCATION ]
+# }
+
+# is_nvim_installed() {
+#     command -v nvim &> /dev/null
+# }
+
+# # extract id_rsa and id_rsa.pub from my lastpass account
+# extract_ssh_keys() {
+#     if ! [ -d ~/.ssh ] ; then
+#         info "~/.ssh missing, creating and chmoding"
+#         mkdir ~/.ssh
+#         chmod 700 ~/.ssh
+#     fi
+#     if ! lpass info | grep "Logged in as $LASTPASS_LOGIN" &> /dev/null
+#     then
+#         lpass login "${LASTPASS_LOGIN}"
+#     fi
+#     lpass show --notes ${LASTPASS_RSA_ID} > ~/.ssh/id_rsa
+#     chmod 600 ~/.ssh/id_rsa
+#     lpass show --notes ${LASTPASS_RSA_PUB_ID} > ~/.ssh/id_rsa.pub
+#     info "SSH keys extracted"
+# }
+
+# # install_package <package_name>
+# install_package() {
+#     package_name=$1
+#    if [ "${install_command}" = "" ] ; then
+#         error "No install command set"
+#     fi
+#     if [ "${package_name}" = "" ] ; then
+#         error "$0: no package name supplied"
+#     fi
+#     eval $install_command $package_name
+# }
+
+# # main
+
+# determine_distro
+# set_distro_vars ${distro}
+
+# if ! command -v git &> /dev/null ; then
+#     error "git not installed"
+#     exit 1
+# fi
+
+# if ! command -v ssh &> /dev/null ; then
+#     error "ssh not installed"
+#     exit 1
+# fi
+
+# if ! is_ssh_keys_installed ; then
+#     info SSH-keys not installed, trying to extract with lastpass
+#     if ! which lpass &> /dev/null ; then
+#         if install_package ${lastpass_package} ; then
+#             extract_ssh_keys
+#         fi
+#     else
+#         extract_ssh_keys
+#     fi
+# else
+#     info SSH keys already installed
+# fi
+
+# # if yadm repo origin is https, switch to git
+# if yadm remote get-url origin | grep ${REPO_HTTPS} &> /dev/null ; then
+#     info "YADM repo is tracking the HTTPS url, changing to git"
+#     yadm remote set-url origin ${REPO_GIT}
+# else
+#     info "YADM repo is tracking the git url"
+# fi
+
+# if is_zsh_installed ; then
+#     info "zsh already installed"
+# else
+#     info "zsh not installed, trying to install"
+#     install_package ${zsh_package}
+# fi
+
+# if is_zsh_my_shell ; then
+#     info "zsh is my shell"
+# else
+#     info "zsh is not my shell, changing"
+#     chsh -s /usr/bin/zsh
+# fi
+
+# if is_nvim_installed ; then
+# 	info "Neovim is installed"
+# else
+#     info "Neovim is not installed, rectifying"
+# 	install_package ${neovim_package}
+# fi
+
+# if test -e "${NVIM_VIM_PLUG_LOCATION}"  ; then
+# 	info "Neovim: vim-plug is installed"
+# else
+# 	info "Neovim: vim-plug is not installed, rectifying"
+# 	curl -fLo "${NVIM_VIM_PLUG_LOCATION}" --create-dirs "${NVIM_VIM_PLUG_URL}"
+# fi
+
+# info "Neovim: installing plugins"
+# nvim --headless -c PlugInstall -c q! -c q! 2> /dev/null
+
+# Local Variables:
+# eval: (outshine-mode 1)
+# End:

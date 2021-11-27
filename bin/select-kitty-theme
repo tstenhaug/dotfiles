@@ -1,0 +1,12 @@
+#!/bin/bash
+
+kitty_dir=~/.config/kitty
+
+theme=$(fd --glob "*.conf" $kitty_dir | fzf)
+if [ "$theme" != "" ] ; then
+    echo selected $theme
+    rm $kitty_dir/theme.conf
+    ln -s $theme $kitty_dir/theme.conf
+else
+    echo no theme selected
+fi

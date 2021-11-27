@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: enumrom
+# key: enumrom
+# --
+#+ATTR_LATEX: :environment enumerate :options [label=(\roman*)]

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: overbar
+# key: ob
+# --
+\overbar{$0}

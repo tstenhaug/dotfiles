@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: prologue
+# key: pro
+# --
+        ## function prologue
+	pushq %rbp
+	movq %rsp, %rbp

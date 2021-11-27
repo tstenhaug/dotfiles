@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: algns
+# key: algns
+# --
+\begin{align*}
+$0
+\end{align*}
