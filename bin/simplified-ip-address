@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Print just interface-name and ip address
+
+ip -j address | jq '.[].addr_info[] | select(.family == "inet") | { iface: .label, ip: .local }'
