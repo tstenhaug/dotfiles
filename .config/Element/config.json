@@ -47,7 +47,7 @@
         "breadcrumbs": true,
         "custom_themes": [
 {
-    "name": "Nord dark theme",
+    "name": "Nord",
     "is_dark": true,
     "colors": {
         "accent-color": "#a3be8c",
