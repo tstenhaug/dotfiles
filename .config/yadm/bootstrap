@@ -42,7 +42,7 @@ set_distro_vars() {
          query_command="pacman -Q"
          python_command="python"
          python_package="python"
-         pip_command="pip"
+         pip_command="pip3"
          pip_package="python-pip"
          zsh_command="zsh"
          zsh_package="zsh"
@@ -120,15 +120,12 @@ ensure_element_is_installed() {
 
 # ensure_pip_module <module>
 ensure_pip_module() {
+	info "checking if python module \"$1\" is installed"
     if ! ${pip_command:?} show $1 &> /dev/null ; then
+		info "  no, rectifying"
         $pip_command install --user $1
-    fi
-}
-
-# ensure_pip_module <module>
-ensure_pip_module() {
-    if ! $python -c "import $1" &> /dev/null ; then
-        $pip_command install --user module
+	else
+		info "  yes"
     fi
 }
 
@@ -148,7 +145,7 @@ for elt in python pip zsh ; do
 done
 
 for i in xdg voluptuous pyyaml ; do
-  ensure_pip_module $i
+    ensure_pip_module $i
 done
 
 info "done, consider running ~/bin/doctor --configure --apply"
