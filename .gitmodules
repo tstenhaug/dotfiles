@@ -7,3 +7,6 @@
 [submodule ".local/share/zinit/zinit.git"]
 	path = .local/share/zinit/zinit.git
 	url = https://github.com/zdharma-continuum/zinit.git
+[submodule "emacs/emacs.d/ke-doom"]
+	path = emacs/emacs.d/ke-doom
+	url = https://github.com/hlissner/doom-emacs
