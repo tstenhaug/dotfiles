@@ -8,7 +8,7 @@ import os
 import platform
 import subprocess
 import sys
-from typing import cast, Any, Callable, Literal, List
+from typing import cast, Any, Callable, Literal, List, Dict
 import warnings
 import yaml
 import xdg
@@ -54,7 +54,7 @@ class DistroSpec:
 Distroname = Literal["archlinux", "fedora"]
 
 
-def get_distro_specs() -> dict[Distroname, DistroSpec]:
+def get_distro_specs() -> Dict[Distroname, DistroSpec]:
     return {
         "archlinux":
         DistroSpec(
