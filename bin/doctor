@@ -98,7 +98,7 @@ class Configurable:
     schema_validator: Any  # TODO this should be a constructor
 
 
-def get_config_elements() -> dict[ConfigurableName, Configurable]:
+def get_config_elements() -> Dict[ConfigurableName, Configurable]:
     return {
         "ssh-keys":
         Configurable(
@@ -113,7 +113,7 @@ def get_config_elements() -> dict[ConfigurableName, Configurable]:
 
 # ** Config
 
-Config = dict[ConfigurableName, Any]
+Config = Dict[ConfigurableName, Any]
 
 def get_config_schema() -> voluptuous.Schema:
     schema = voluptuous.Schema({
@@ -248,7 +248,7 @@ def prompt_str(prompt):
 
 def ask_config() -> Config:
     """Prompt for values for all configuration elements."""
-    config: dict[ConfigurableName, Any] = {}
+    config: Dict[ConfigurableName, Any] = {}
     for key, elt in get_config_elements().items():
         config[key] = elt.ask_for_value(elt.description)
     validate_or_die(config)
@@ -284,10 +284,10 @@ def ensure_package_installed(package: Package) -> bool:
         info(f"package {package.package_name} is not installed, fixing")
         return install_package(package)
         
-def read_os_relase() -> dict[str, str]:
+def read_os_relase() -> Dict[str, str]:
     """Read /etc/os-release and return its contents as a dict."""
     with open("/etc/os-release") as file:
-        os_release: dict[str, str] = {}
+        os_release: Dict[str, str] = {}
         for line in file:
             k, v = line.rstrip().split("=")
             os_release[k] = v.strip('"')
