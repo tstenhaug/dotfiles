@@ -8,7 +8,7 @@ import os
 import platform
 import subprocess
 import sys
-from typing import cast, Any, Callable, Literal
+from typing import cast, Any, Callable, Literal, List
 import warnings
 import yaml
 import xdg
@@ -39,7 +39,7 @@ class Package:
 
 # Type for commands for performing an operation on a distro, for
 # example, install and query commands.
-DistroCmd = list[str]
+DistroCmd = List[str]
 
 
 @dataclasses.dataclass
