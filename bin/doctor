@@ -37,6 +37,8 @@ class Package:
     package_name: str
 
 
+# Type for commands for performing an operation on a distro, for
+# example, install and query commands.
 DistroCmd = list[str]
 
 
@@ -212,7 +214,7 @@ def configure_nvim(val: bool) -> bool:
 
 def ask_yn(prompt: str):
     while True:
-        ans = input(prompt + " (y/n) ")
+        ans = input(prompt_str(prompt) + " (y/n) ")
         if ans in ["y", "n"]:
             return ans == "y"
 
@@ -224,20 +226,22 @@ def ask_yn(prompt: str):
 ANSI_GREEN = "\u001b[32m"
 ANSI_RED = "\u001b[31m"
 ANSI_YELLOW = "\u001b[33m"
+ANSI_BLUE = "\u001b[34m"
 ANSI_RESET = "\u001b[0m"
 
-
 def info(msg: str, newline: bool = True):
-    print(f"{ANSI_GREEN}DOCTOR{ANSI_RESET}:", msg, end="\n" if newline else "")
+    print(f"[{ANSI_GREEN}DOCTOR{ANSI_RESET}]", msg, end="\n" if newline else "")
 
 
 def warn(msg: str):
-    print(f"{ANSI_YELLOW}DOCTOR-WARNING{ANSI_RESET}:", msg, file=sys.stderr)
+    print(f"[{ANSI_YELLOW}DOCTOR-WARNING{ANSI_RESET}]", msg, file=sys.stderr)
 
 
 def error(msg: str):
-    print(f"{ANSI_RED}DOCTOR-ERROR{ANSI_RESET}:", msg, file=sys.stderr)
+    print(f"[{ANSI_RED}DOCTOR-ERROR{ANSI_RESET}]", msg, file=sys.stderr)
 
+def prompt_str(prompt):
+    return f"[{ANSI_BLUE}DOCTOR{ANSI_RESET}] {prompt}"
 
 # * Commands
 
@@ -322,7 +326,7 @@ def write_config(config: Config, filename: str = CONFIG_FILENAME) -> bool:
 
 
 def mod(filename: str):
-    """Return the access ("mod") bits of filename."""
+    """Return the access ("mod") bits of file."""
     return os.stat(filename).st_mode & 0o777
 
 
