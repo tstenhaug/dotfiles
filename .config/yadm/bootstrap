@@ -29,6 +29,12 @@ determine_distro() {
            return 0
        fi
    fi
+   if [ -f /etc/os-release ] ; then
+       if grep "ID=ubuntu" /etc/os-release &> /dev/null ; then
+           distro=ubuntu
+           return 0
+       fi
+   fi
    distro=unknown
    return 0
 }
@@ -60,6 +66,16 @@ set_distro_vars() {
        fedora)
            install_command="sudo dnf install -y"
            query_command="dnf list installed"
+           python_command="python3"
+           python_package="python3"
+           pip_command="pip3"
+           pip_package="python3-pip"
+           zsh_command="zsh"
+           zsh_package="zsh"
+           ;;
+       ubuntu)
+           install_command="sudo apt install -y"
+           query_command="dpkg -s"
            python_command="python3"
            python_package="python3"
            pip_command="pip3"
