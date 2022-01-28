@@ -70,6 +70,13 @@ def get_distro_specs() -> Dict[Distroname, DistroSpec]:
             lastpass=Package(command="lpass", package_name="lastpass-cli"),
             zsh=Package(command="zsh", package_name="zsh"),
         ),
+        "ubuntu":
+        DistroSpec(
+            install_command=["sudo", "apt", "install"],
+            query_command=["dpkg", "-s"],
+            lastpass=Package(command="lpass", package_name="lastpass-cli"),
+            zsh=Package(command="zsh", package_name="zsh"),
+        ),
     }
 
 def get_distro_spec() -> DistroSpec:
