@@ -10,12 +10,3 @@ curl -L bootstrap.yadm.io | bash
 ```
 
 
-# RHEL/CentOS
-
-In order to install `YADM` you need root access, and do the following.
-
-```
-cd /etc/yum.repos.d/
-
-yum install yadm
-```
