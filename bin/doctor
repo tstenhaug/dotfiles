@@ -247,7 +247,8 @@ def warn(msg: str):
 def error(msg: str):
     print(f"[{ANSI_RED}DOCTOR-ERROR{ANSI_RESET}]", msg, file=sys.stderr)
 
-def prompt_str(prompt):
+
+def prompt_str(prompt: str):
     return f"[{ANSI_BLUE}DOCTOR{ANSI_RESET}] {prompt}"
 
 # * Commands
