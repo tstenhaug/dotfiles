@@ -31,6 +31,10 @@ input "type:keyboard" {
   xkb_options ctrl:swapcaps
 }
 
+input "type:touchpad" {
+  natural_scroll true
+}
+
 bar {
     swaybar_command waybar
 }
