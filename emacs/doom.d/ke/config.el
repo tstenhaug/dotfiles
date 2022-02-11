@@ -19,7 +19,7 @@
 ;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 22))
 (setq doom-font (pcase (system-name)
-                  ("korhal" (font-spec :family "JetBrains Mono" :size 20))
+                  ("korhal" (font-spec :family "JetBrains Mono" :size 22))
                   ("shakuras" (font-spec :family "JetBrains Mono" :size 16))
                   (_ (font-spec :family "DejaVu Sans Mono" :size 24))))
 
