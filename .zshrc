@@ -5,6 +5,7 @@ HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory
+unsetopt LIST_BEEP
 
 # Path to your oh-my-zsh installation.
 #export ZSH=$HOME/.oh-my-zsh
@@ -19,6 +20,7 @@ zinit ice depth"1" # git clone depth
 zinit light romkatv/powerlevel10k
 zinit light olets/zsh-abbr
 zinit light mfaerevaag/wd
+zinit light zsh-users/zsh-completions
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -57,7 +59,8 @@ bindkey -e
 
 # Variables
 
-rn="zh1885@zh1885.rsync.net"
+export rn="zh1885@zh1885.rsync.net"
+export rnb="zh1885s1@zh1885s1.rsync.net"
 SSH_AUTH_SOCK=${SSH_AUTH_SOCK:-${XDG_RUNTIME_DIR}/ssh-agent.socket}
 DOOMDIR=${DOOMDIR:-${HOME}/emacs/doom.d/ke}
 
