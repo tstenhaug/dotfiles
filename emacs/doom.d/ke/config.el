@@ -375,6 +375,7 @@
         (:prefix ("p" . "priority/preview")
          "D" #'ke/org-delete-preview-latex-image-directory
          "b" #'ke/org-latex-preview-buffer
+         "e" #'org-toggle-pretty-entities
          "f" #'org-latex-preview
          "p" #'org-priority
          "s" #'ke/org-latex-preview-subtree)
