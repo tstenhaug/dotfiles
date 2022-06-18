@@ -404,7 +404,6 @@
   "Delete the directory containing temporary images for preview."
   (interactive)
   (let ((directory (expand-file-name org-preview-latex-image-directory)))
-    (assert (eq 'org-mode major-mode))
     (when (yes-or-no-p (format "Sure you want to delete %s"
                                directory))
       (delete-directory directory t)
