@@ -4,7 +4,9 @@ export PATH=$HOME/.local/bin:$HOME/bin:$PATH
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
+
 setopt appendhistory
+setopt autocd
 unsetopt LIST_BEEP
 
 # Path to your oh-my-zsh installation.
