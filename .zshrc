@@ -75,6 +75,11 @@ if [[ -o interactive ]] ; then
 fi
 
 
+zstyle ':completion:*' completer _complete _ignored
+zstyle :compinstall filename '/home/thomas/.zshrc'
+
+autoload -Uz compinit
+compinit
 # Load powerlevel10k theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
