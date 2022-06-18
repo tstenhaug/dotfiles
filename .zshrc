@@ -17,7 +17,6 @@ export LIBVIRT_DEFAULT_URI="qemu:///system"
 ZINIT_HOME=~/.local/share/zinit/zinit.git
 source "$ZINIT_HOME/zinit.zsh"
 
-# Load powerlevel10k theme
 zinit ice depth"1" # git clone depth
 zinit light romkatv/powerlevel10k
 zinit light olets/zsh-abbr
@@ -75,5 +74,7 @@ if [[ -o interactive ]] ; then
   fi
 fi
 
+
+# Load powerlevel10k theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
