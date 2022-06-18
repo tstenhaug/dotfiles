@@ -1,5 +1,6 @@
 abbr e="emacsclient"
 abbr gcm="git commit -m "
+abbr ggs="grim -g \"\$(slurp)\""
 abbr jc="journalctl"
 abbr n="nvim"
 abbr prmi="podman run --rm=true -it"
