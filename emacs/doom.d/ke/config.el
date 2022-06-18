@@ -354,7 +354,7 @@
     )
   (setq org-ditaa-jar-path "~/.emacs.d/.local/straight/repos/org-mode/contrib/scripts/ditaa.jar")
   (setq org-format-latex-options
-        (plist-put org-format-latex-options :scale 1.8))
+        (plist-put org-format-latex-options :scale 1.2))
   (setq org-id-link-to-org-use-id t)
   (setq org-list-allow-alphabetical t)
   (setq org-log-into-drawer t)
