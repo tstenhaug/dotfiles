@@ -74,6 +74,9 @@
       :prefix "t"
       "S" #'solaire-mode
       "P" #'smartparens-mode)
+(map! :leader
+      :prefix "g"
+      :desc "Magit status in YADM" "k" #'ke/yadm)
 
 ;; separate TAB from C-i, and bind it to yas-expand
 (define-key input-decode-map [?\C-i] [C-i])
