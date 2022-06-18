@@ -6,7 +6,7 @@
 set $mod Mod4
 
 floating_modifier $mod
-set $opacity 0.8
+set $opacity 1
 set $term kitty
 set $wallpaper "~/df/img/wallpapers/nord-theme-abstract-mountain-2.png"
 set $notifications mako
