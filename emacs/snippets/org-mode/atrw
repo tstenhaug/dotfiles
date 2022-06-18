@@ -2,4 +2,4 @@
 # name: atrw
 # key: atrw
 # --
-#+ATTR_ORG: :width $0
+#+attr_org: :width ${1:600}  $0
