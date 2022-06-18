@@ -664,3 +664,8 @@
    browse-url-generic-program  "/mnt/c/Windows/System32/cmd.exe"
    browse-url-generic-args     '("/c" "start")
    browse-url-browser-function #'browse-url-generic))
+;; fancy splash
+(setq fancy-splash-image
+      (expand-file-name (concat
+                         doom-private-dir "banners/doom-logo.png")))
+
