@@ -1,4 +1,6 @@
 abbr e="emacsclient"
+abbr en="emacsclient -n"
+abbr gcg="git clone git@github.com/"
 abbr gcm="git commit -m "
 abbr ggs="grim -g \"\$(slurp)\""
 abbr jc="journalctl"
