@@ -6,9 +6,9 @@
 set $mod Mod4
 
 floating_modifier $mod
-set $opacity 1
+set $opacity 0.98
 set $term kitty
-set $wallpaper "~/df/img/wallpaper/dark-wallpaper-abstract.jpg"
+set $wallpaper "~/df/img/wallpaper/nord-mountain.png"
 set $notifications mako
 set $polkit "/usr/libexec/kf5/polkit-kde-authentication-agent-1"
 font pango:DejaVu Sans 12
