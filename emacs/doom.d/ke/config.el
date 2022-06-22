@@ -332,6 +332,23 @@
   (map! :leader
         :desc "Lipsum paragraph" "i l" #'lorem-ipsum-insert-paragraphs))
 
+;; ** mu4e
+
+(after! mu4e
+  ;; mailbox.org config
+  (set-email-account!
+   "tstenhaug@mailbox.me"
+   '((user-mail-address . "tstenhaug@mailbox.org")
+     (mu4e-sent-folder  . "/mbox/Sent")
+     (mu4e-drafts-folder  . "/mbox/Drafts")
+     (mu4e-trash-folder  . "/mbox/Trash")
+     (mu4e-refile-folder  . "/mbox/Archive/2022")
+     (smtpmail-smtp-user . "tstenhaug@mailbox.org")
+     (smtpmail-smtp-server . "smtp.mailbox.org")
+     (smtpmail-smtp-service . 587)
+     (smtpmail-stream-type . starttls))
+   t))
+
 ;; ** ol-* (org link)
 ;; ** org-mode
 

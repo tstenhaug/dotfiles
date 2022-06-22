@@ -1,0 +1,14 @@
+#!/usr/bin/env python
+
+# mu-rebuild -- rebuild mu index with options
+
+MAILDIR = "~/.mail"
+ADDRESSES = ["tstenhaug@mailbox.org", "thomas@stenhaug.io"]
+
+import subprocess
+
+maildir_args = [ f"--maildir={MAILDIR}" ]
+address_args = [ f"--my-address={address}" for address in ADDRESSES ]
+args = ["mu", "init"] + maildir_args + address_args
+subprocess.call(args)
+subprocess.call(["mu", "index"])
