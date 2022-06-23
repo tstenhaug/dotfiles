@@ -1,0 +1,22 @@
+IMAPAccount mbox
+Host imap.mailbox.org
+User tstenhaug@mailbox.org
+PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.mailpass.gpg"
+SSLType STARTTLS
+
+IMAPStore mbox-remote
+Account mbox
+
+MaildirStore mbox-local
+Path ~/.mail/mbox/
+SubFolders Verbatim
+Inbox ~/.mail/mbox/INBOX/
+
+Channel mbox
+Far :mbox-remote:
+Near :mbox-local:
+Patterns *
+Create Both
+Sync all
+Expunge None
+SyncState *
