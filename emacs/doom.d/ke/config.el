@@ -243,24 +243,6 @@
 (after! evil-org
   (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h))
 
-;; ** gnus
-
-(after! gnus
-  (setq gnus-posting-styles
-        '((".*"
-           (From "Thomas Stenhaug <thomas.stenhaug@gmail.com>"))))
-  (setq gnus-select-method '(nntp "news.sunsite.dk"))
-  (add-to-list 'gnus-secondary-select-methods
-               '(nnimap "gmail"
-                        (nnimap-address "imap.gmail.com") ; it could also be imap.googlemail.com if that's your server.
-                        (nnimap-server-port "imaps")
-                        (nnimap-stream ssl)
-                        (nnmail-expiry-target "nnimap+gmail:[Gmail]/Trash") ; Move expired messages to Gmail's trash.
-                        (nnmail-expiry-wait immediate))) ; Mails marked as expired can be processed immediately.
-  (setq smtpmail-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-service 587
-        gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]"))
-
 ;; ** graphviz-dot-mode
 
 (use-package! graphviz-dot-mode)
