@@ -549,6 +549,12 @@
 ;; ** tramp
 
 (after! tramp
+  ;; tentative configuration to work around undesirable behaviour when
+  ;; tramp-host runs zsh.
+  (add-to-list 'tramp-connection-properties
+               (list (regexp-quote "/sshx:tarsonis:")
+                     "remote-shell" "/bin/sh"))
+  ;; facilitate using Emacs for working with dotfiles repo in YADM
   (add-to-list 'tramp-methods
                '("yadm"
                  (tramp-login-program "yadm")
