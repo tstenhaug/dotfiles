@@ -480,16 +480,6 @@
 
 (after! ox-latex
   (setq org-latex-listings 'minted)
-  (setq org-latex-packages-alist
-        '(("" "kesci" t)
-          ("" "keunicodechars" t)
-          ;; ("" "unicode-math" t ("xelatex"))
-          ("" "libertine" t)
-          ("" "svg" t)
-          ("" "tikz" t)
-          ("scaled=0.89" "inconsolata" t) ; for verbatim/listings etc
-                                        ; (tt-family)
-          ("" "minted" t)))
   (setq org-latex-pdf-process '("latexmk -g -pdf -pdflatex=\"%latex\" --shell-escape -outdir=%o %f")))
 
 ;; ** pdf-tools

@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: SDU report
+# key: sdureport
+# --
+#+latex_header: \usepackage{kesci}
+#+latex_header: \usepackage{keunicodechars}
+#+latex_header: \usepackage{libertine}
+#+latex_header: \usepackage[scaled=0.89]{inconsolata}
+#+latex_header: \usepackage{minted}
