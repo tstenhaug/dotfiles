@@ -318,6 +318,7 @@
 
 (after! mu4e
   ;; mailbox.org config
+  (setq mu4e-update-interval 60)
   (set-email-account!
    "tstenhaug@mailbox.me"
    '((user-mail-address . "tstenhaug@mailbox.org")
