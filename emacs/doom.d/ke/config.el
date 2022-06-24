@@ -329,7 +329,12 @@
      (smtpmail-smtp-user . "tstenhaug@mailbox.org")
      (smtpmail-smtp-server . "smtp.mailbox.org")
      (smtpmail-smtp-service . 587)
-     (smtpmail-stream-type . starttls))
+     (smtpmail-stream-type . starttls)
+     (mu4e-bookmarks .
+      ((:name "Unread messages" :query "flag:unread AND NOT flag:trashed" :key 117)
+        (:name "Today's messages" :query "date:today..now" :key 116)
+        (:name "Last 7 days" :query "date:7d..now" :hide-unread t :key 119)
+        (:name "Inbox" :query "/mbox/Inbox" :key ?i))))
    t))
 
 ;; ** ol-* (org link)
