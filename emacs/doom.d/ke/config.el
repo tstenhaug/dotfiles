@@ -671,3 +671,9 @@
       (expand-file-name (concat
                          doom-private-dir "banners/doom-logo.png")))
 
+
+;; Opt out of line numbers for some modes
+
+(remove-hook! '(text-mode-hook)
+              #'display-line-numbers-mode)
+
