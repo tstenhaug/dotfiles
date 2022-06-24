@@ -677,3 +677,13 @@
 (remove-hook! '(text-mode-hook)
               #'display-line-numbers-mode)
 
+;; Don't use ligatures in org-mode. This is specifically because it messses up
+;; tables =|-=. I can't find any easy way to customize
+;; `+ligature--composition-table' for a specific mode only. I don't know when I
+;; would use any ligature starting with | so I could remove that. But there are
+;; some others that just don't do well in org-mode.
+;;
+;;The default for +ligatures-in-modes is a list which starts with 'not, which
+;; inverts the selection. We're justting org-mode to the negated list.
+
+(appendq! +ligatures-in-modes '(org-mode))
