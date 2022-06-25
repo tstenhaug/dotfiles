@@ -469,10 +469,6 @@
 ;;           (org-link-escape
 ;;            (funcall org-download-abbreviate-filename-function filename))))
 
-(after! org
-  ;; The directory in which my org-files are stored is synced. By default,
-  ;; orgids are stored inside this directory, which causes spurious conflicts.
-  (setq org-id-locations-file "~/.cache/orgids"))
 
 ;; ** org-journal
 
