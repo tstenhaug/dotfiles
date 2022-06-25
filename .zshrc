@@ -62,9 +62,14 @@ bindkey -e
 
 export rn="zh1885@zh1885.rsync.net"
 export rnb="zh1885s1@zh1885s1.rsync.net"
-SSH_AUTH_SOCK=${SSH_AUTH_SOCK:-${XDG_RUNTIME_DIR}/ssh-agent.socket}
 DOOMDIR=${DOOMDIR:-${HOME}/emacs/doom.d/ke}
 
+
+# If we don't have a "route" to an SSH agent, assume that agent is started, e.g.
+# as a systemd user service.
+SSH_AUTH_SOCK=${SSH_AUTH_SOCK:-${XDG_RUNTIME_DIR}/ssh-agent.socket}
+
+# In an interactive shell, prompt for ssh passwords, if none are unlocked yet.
 if [[ -o interactive ]] ; then
   if [ -S $SSH_AUTH_SOCK ] ; then
     export SSH_AUTH_SOCK
