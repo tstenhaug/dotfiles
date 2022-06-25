@@ -80,6 +80,9 @@ zstyle :compinstall filename '/home/thomas/.zshrc'
 
 autoload -Uz compinit
 compinit
+
 # Load powerlevel10k theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
