@@ -365,6 +365,9 @@
         (plist-put org-format-latex-options :scale 1.2))
   (setq org-hide-emphasis-markers t)
   (setq org-id-link-to-org-use-id t)
+  ;; The directory in which my org-files are stored is synced. By default,
+  ;; orgids are stored inside this directory, which causes spurious conflicts.
+  (setq org-id-locations-file "~/.cache/orgids")
   (setq org-list-allow-alphabetical t)
   (setq org-log-into-drawer t)
   (setq org-pretty-entities t)
@@ -466,7 +469,10 @@
 ;;           (org-link-escape
 ;;            (funcall org-download-abbreviate-filename-function filename))))
 
-
+(after! org
+  ;; The directory in which my org-files are stored is synced. By default,
+  ;; orgids are stored inside this directory, which causes spurious conflicts.
+  (setq org-id-locations-file "~/.cache/orgids"))
 
 ;; ** org-journal
 
