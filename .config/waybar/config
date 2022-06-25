@@ -146,10 +146,10 @@
         "on-click": "swaymsg exec \"\\$term_float watch sensors\""
     },
 
-    "tray": {
-        "icon-size": 21,
-        "spacing": 5
-    },
+     "tray": {
+         "icon-size": 21,
+         "spacing": 5
+     },
 
     "custom/menu": {
         "format": "",
