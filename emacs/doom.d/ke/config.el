@@ -379,6 +379,9 @@
         "t" nil
         "T" nil)
   (map! :map org-mode-map
+        :n "gj" #'org-forward-element
+        :n "gk" #'org-backward-element)
+  (map! :map org-mode-map
         :localleader
         "T" #'org-babel-tangle
         (:prefix ("p" . "priority/preview")
