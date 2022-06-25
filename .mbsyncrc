@@ -17,6 +17,6 @@ Far :mbox-remote:
 Near :mbox-local:
 Patterns *
 Create Both
-Sync all
-Expunge None
+Sync All
+Expunge Both
 SyncState *
