@@ -17,13 +17,12 @@
     "height": 30,
     "position": "top",
 
-    "modules-left": ["custom/menu", "sway/workspaces"],
-    "modules-center": ["custom/wf-recorder", "sway/mode", "custom/weather"],
+    "modules-left": ["sway/workspaces"],
+    "modules-center": ["sway/mode"],
     "modules-right": [
         // informational
         // "sway/language",
         // "custom/github",
-        "custom/clipboard",
         "cpu",
         "memory",
         "battery",
@@ -31,17 +30,17 @@
 
         // connecting
         "network",
-        "bluetooth",
+//        "bluetooth",
 
         // media
-        "custom/playerctl",
-        "idle_inhibitor",
+//        "custom/playerctl",
+//        "idle_inhibitor",
         "pulseaudio",
-        "backlight",
+//        "backlight",
 
         // system
-        "custom/sunset",
-        "custom/pacman",
+//        "custom/sunset",
+//        "custom/pacman",
 
         "tray",
         "clock"
@@ -176,39 +175,6 @@
         "tooltip-format": "{}"
     },
 
-    "sway/language": {
-        "format": " {}",
-        "min-length": 5,
-        "tooltip": false,
-        "on-click": "swaymsg input $(swaymsg -t get_inputs --raw | jq '[.[] | select(.type == \"keyboard\")][0] | .identifier') xkb_switch_layout next"
-    },
-
-    "custom/sunset": {
-        "interval": "once",
-        "tooltip": false,
-        "return-type": "json",
-        "format": "{icon}",
-        "format-icons": {
-            "on": "",
-            "off": ""
-        },
-        "exec": "/usr/share/sway/scripts/sunset.sh",
-        "on-click": "/usr/share/sway/scripts/sunset.sh toggle; pkill -RTMIN+6 waybar",
-        "exec-if": "/usr/share/sway/scripts/sunset.sh check",
-        "signal": 6
-    },
-
-    "custom/wf-recorder": {
-        "interval": "once",
-        "return-type": "json",
-        "format": "{}",
-        "tooltip-format": "{tooltip}",
-        "exec": "echo '{\"class\": \"recording\",\"text\":\"雷\",\"tooltip\":\"press $mod+Esc to stop recording\"}'",
-        "exec-if": "pgrep wf-recorder",
-        "on-click": "killall -s SIGINT wf-recorder",
-        "signal": 8
-    },
-
     "custom/github": {
         "interval": 300,
         "tooltip": false,
@@ -249,34 +215,4 @@
         "signal": 9
     },
 
-    "custom/weather": {
-        "icon-size": 42,
-        "format": "{icon} {}",
-        "tooltip": true,
-        "interval": 3600,
-        // accepts a location as an argument (in quotes)
-        "exec": "/usr/share/sway/scripts/weather.py",
-        "return-type": "json",
-        "format-icons": {
-            "Unknown": "",
-            "Cloudy": "摒",
-            "Fog": "",
-            "HeavyRain": "",
-            "HeavyShowers": "",
-            "HeavySnow": "",
-            "HeavySnowShowers": "ﰕ",
-            "LightRain": "",
-            "LightShowers": "",
-            "LightSleet": "",
-            "LightSleetShowers": "",
-            "LightSnow": "",
-            "LightSnowShowers": "ﭽ",
-            "PartlyCloudy": "",
-            "Sunny": "",
-            "ThunderyHeavyRain": "ﭼ",
-            "ThunderyShowers": "",
-            "ThunderySnowShowers": "",
-            "VeryCloudy": ""
-        }
-    }
 }
