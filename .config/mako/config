@@ -1,0 +1,9 @@
+background-color=#272C36
+border-color=#272C36
+border-radius=10
+border-size=3
+padding=10
+width=600
+height=300
+font=Roboto 14
+default-timeout=10000
