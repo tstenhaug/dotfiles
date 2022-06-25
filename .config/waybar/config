@@ -32,7 +32,7 @@
 
         // connecting
         "network",
-//        "bluetooth",
+        "bluetooth",
 
         // media
 //        "custom/playerctl",
@@ -167,14 +167,11 @@
     },
 
     "bluetooth": {
-        "format": "{icon}",
-        "interval": 30,
-        "format-icons": {
-            "enabled": "",
-            "disabled": ""
-        },
-        "on-click": "blueberry",
-        "tooltip-format": "{}"
+        "format-alt": "bluetooth: {status}",
+        "format-on": "",
+        "format-off": "!",
+        "on-click": "foot bluetoothctl",
+        "tooltip-format": "{status}"
     },
 
     "custom/github": {
