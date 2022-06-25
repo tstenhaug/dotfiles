@@ -151,15 +151,6 @@
         "spacing": 5
     },
 
-    "custom/pacman": {
-        "format": " {}",
-        "interval": 3600,
-        "exec-if": "[ $(pamac checkupdates -q | wc -l) -gt 0 ]",
-        "exec": "pamac checkupdates -q | wc -l",
-        "on-click": "pamac-manager --updates; pkill -RTMIN+4 waybar",
-        "signal": 4
-    },
-
     "custom/menu": {
         "format": "",
         "on-click": "swaymsg exec \\$menu",
