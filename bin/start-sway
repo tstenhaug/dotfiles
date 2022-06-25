@@ -2,13 +2,5 @@
 
 # start-sway -- wraps starting sway 
 
-export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
-export DOOMDIR=/home/thomas/emacs/doom.d/ke
-export CLUTTER_BACKEND=wayland
-export SDL_VIDEODRIVER=wayland
-export XDG_SESSION_TYPE=wayland
-export QT_QPA_PLATFORM=wayland
-export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
-export MOZ_ENABLE_WAYLAND=1
-export GDK_BACKEND=wayland
+source $(dirname ${0})/start-sway-common
 sway

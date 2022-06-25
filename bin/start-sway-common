@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# sway common - common settings for start-sway* wrappers 
+
+# If gnome-keyring-daemon is already running, hook into its machinery for SSH
+# and GPG keys.
+if [ -d $XDG_RUNTIME_DIR/keyring ] ; then
+    export $(gnome-keyring-daemon --start)
+else
+# otherwise, trust that ssh-agent will be available through other means
+    export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
+fi
+
+export DOOMDIR=/home/thomas/emacs/doom.d/ke
+export CLUTTER_BACKEND=wayland
+export SDL_VIDEODRIVER=wayland
+export XDG_SESSION_TYPE=wayland
+export QT_QPA_PLATFORM=wayland
+export MOZ_ENABLE_WAYLAND=1
+export GDK_BACKEND=wayland
+

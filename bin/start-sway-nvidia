@@ -2,23 +2,17 @@
 
 # startsway -- wraps starting sway on nvidia with pertinent variables
 
-# If gnome-keyring-daemon is already running, hook into its machinery for SSH
-# and GPG keys.
-if [ -d $XDG_RUNTIME_DIR/keyring ] ; then
-    export $(gnome-keyring-daemon --start)
-else
-# otherwise, trust that ssh-agent will be available through other means
-    export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
-fi
-export DOOMDIR=/home/thomas/emacs/doom.d/ke
-export CLUTTER_BACKEND=wayland
-export SDL_VIDEODRIVER=wayland
-export XDG_SESSION_TYPE=wayland
-export QT_QPA_PLATFORM=wayland
+source $(dirname ${0})/start-sway-common 
+
 export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
-export MOZ_ENABLE_WAYLAND=1
 export GBM_BACKEND=nvidia-drm
 export __GLX_VENDOR_LIBRARY_NAME=nvidia
 export WLR_NO_HARDWARE_CURSORS=1
 export GDK_BACKEND=wayland
-sway --my-next-gpu-wont-be-nvidia
+if sway --version | grep 1\.7 ; then
+    NVIDIA_FLAG=--unsupported-gpu
+else
+    NVIDIA_FLAG=--my-next-gpu-wont-be-nvidia
+fi
+
+sway $NVIDIA_FLAG 
