@@ -19,6 +19,7 @@ set $term_float kitty --class="term_float"
 for_window [app_id="term_float"] floating enable
 for_window [app_id="term_float"] resize set height 500
 for_window [app_id="term_float"] resize set width 900
+for_window [app_id="term_float"] border pixel 1
 
 # support for X11 apps
 xwayland enable
