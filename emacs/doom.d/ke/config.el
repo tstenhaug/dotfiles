@@ -133,14 +133,29 @@
 
 ;; ** abbrev-mode
 
-(use-package abbrev
-  :diminish abbrev-mode
-  :init
-  (setq save-abbrevs 'silently)
+;; As of 2022-06-26, the abbrev machinery doesn't quite work with Doom, so
+;; we're working around it like this.
+
+(defvar ke-abbrev-file-name
+  (expand-file-name "~/df/shared-cache/abbrev-defs.el")
+  "Filename of KE abbreviations.
+
+If the file exists, load it and enable saving of abbrevs.")
+
+(defun ke-write-abbrev-file ()
+  "Write abbrevs to `ke-abbrev-file-name'"
+  (interactive)
+  (write-abbrev-file ke-abbrev-file-name))
+
+(map! :leader
+      :desc "Write abbrevs to default file" "fa" #'ke-write-abbrev-file)
+
+;; only use ke-abbrevs if the machine is syncing ~/df
+(when (file-exists-p ke-abbrev-file-name)
+  (setq abbrev-file-name ke-abbrev-file-name)
   (setq-default abbrev-mode 1)
-  :config
-  (if (file-exists-p abbrev-file-name)
-      (quietly-read-abbrev-file)))
+  ;; ref the above, this in particular doesn't work as of 2022-06-26
+  (setq save-abbrevs 'silently))
 
 ;; ** blink-cursor
 ;;
