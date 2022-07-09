@@ -327,11 +327,11 @@ If the file exists, load it and enable saving of abbrevs.")
   (setq mu4e-update-interval 60)
   (set-email-account!
    "tstenhaug@mailbox.me"
-   '((user-mail-address . "tstenhaug@mailbox.org")
+   `((user-mail-address . "tstenhaug@mailbox.org")
      (mu4e-sent-folder  . "/mbox/Sent")
      (mu4e-drafts-folder  . "/mbox/Drafts")
      (mu4e-trash-folder  . "/mbox/Trash")
-     (mu4e-refile-folder  . "/mbox/Archive/2022")
+     (mu4e-refile-folder  . ,(concat "/mbox/Archive/" (format-time-string "%Y")))
      (smtpmail-smtp-user . "tstenhaug@mailbox.org")
      (smtpmail-smtp-server . "smtp.mailbox.org")
      (smtpmail-smtp-service . 587)
