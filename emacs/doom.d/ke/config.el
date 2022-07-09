@@ -111,21 +111,12 @@
 
 (defhydra hydra-open (:color blue)
   "open"
-  ("9" (find-file "~/sdu/dm879-artificial-intelligence/dm879.org")
-   "DM879 Artificial Intelligence")
-  ("6" (find-file "~/sdu/dm566-data-mining-and-machine-learning/dm566.org")
-   "DM565 Data Mining and Machine Learning")
   ("d" (find-file "~/df/notes/diary.org.gpg"))
-  ("g" (find-file "~/df/org/gtd.org") "gtd")
+  ("f" (find-file "~/df/finance/finance.org"))
   ("h" (find-file "~/df/org/habits.org") "habits")
-  ("i" (find-file "~/.config/i3/config") "i3-config")
   ("j" (find-file "~/df/notes/journal.org") "journal")
-  ("k" (find-file "~/ke") "ke")
   ("n" (find-file "~/df/notes/notes.org") "notes")
-  ("p" (find-file "~/df/notes/projects.org" "projects"))
-  ("r" (find-file "~/df/repetition/anki.org") "rep")
-  ("s" (find-file "~/scratch/scratch.org") "scratch")
-  ("t" (find-file "~/df/org/todo.org")))
+  ("t" (find-file "~/df/org/tasks.org")))
 
 (global-set-key (kbd "<f2>") 'hydra-open/body)
 
