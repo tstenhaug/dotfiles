@@ -7,7 +7,7 @@ SAVEHIST=10000
 
 setopt appendhistory
 setopt autocd
-unsetopt LIST_BEEP
+unsetopt BEEP
 
 # Path to your oh-my-zsh installation.
 #export ZSH=$HOME/.oh-my-zsh
