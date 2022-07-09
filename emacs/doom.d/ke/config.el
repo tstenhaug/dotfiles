@@ -386,7 +386,7 @@ If the file exists, load it and enable saving of abbrevs.")
   (setq org-pretty-entities t)
   (setq org-preview-latex-default-process 'dvisvgm)
   (setq org-startup-folded t)
-  (setq org-use-sub-superscripts t))
+  (setq org-use-sub-superscripts nil))
 
 (defun ke-org-init-keybinds-h ()
   (map! :map org-mode-map
