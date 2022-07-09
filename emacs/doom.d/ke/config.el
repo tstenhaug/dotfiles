@@ -358,6 +358,7 @@ If the file exists, load it and enable saving of abbrevs.")
 ;; https://github.com/hlissner/doom-emacs/issues/814
 
 (after! org
+  (setq +org-capture-todo-file "~/df/org/tasks.org")
   (setq org-agenda-custom-commands
         '(("l" agenda*)
           ("d" "Today-todos" tags-todo "today")))
@@ -366,6 +367,12 @@ If the file exists, load it and enable saving of abbrevs.")
     ;; ;; (push '("\\.pdf\\'" . "evince %s") org-file-apps)
     (push '("\\.pdf\\'" . emacs) org-file-apps)
     )
+  (setq org-capture-templates
+        `(("t" "Personal todo" entry
+           (file+headline +org-capture-todo-file "Inbox"))
+          ("d" "Diary" entry
+           (file+olp+datetree "~/df/notes/diary.org.gpg")
+           "* %<%H:%M> %?" :prepend t)))
   (setq org-ditaa-jar-path "~/.emacs.d/.local/straight/repos/org-mode/contrib/scripts/ditaa.jar")
   (setq org-format-latex-options
         (plist-put org-format-latex-options :scale 1.2))
