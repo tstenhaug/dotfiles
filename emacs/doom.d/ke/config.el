@@ -723,6 +723,4 @@ If the file exists, load it and enable saving of abbrevs.")
 
 ;; Opt out of line numbers for some modes
 
-(remove-hook! '(text-mode-hook)
-              #'display-line-numbers-mode)
-
+(remove-hook! '(text-mode-hook) #'display-line-numbers-mode)
