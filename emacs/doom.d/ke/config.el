@@ -246,6 +246,14 @@ If the file exists, load it and enable saving of abbrevs.")
 (after! evil-org
   (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h))
 
+;; ** gnus
+
+(use-package! gnus
+  :config
+  (setq gnus-select-method '(nntp "news.gmane.io"))
+  (map! :map gnus-summary-mode-map
+        :n "\\" #'gnus-summary-next-page))
+
 ;; ** graphviz-dot-mode
 
 (use-package! graphviz-dot-mode)
