@@ -512,7 +512,6 @@ If the file exists, load it and enable saving of abbrevs.")
 ;;           (org-link-escape
 ;;            (funcall org-download-abbreviate-filename-function filename))))
 
-
 ;; ** org-journal
 
 (after! org-journal
