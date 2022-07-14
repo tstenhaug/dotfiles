@@ -64,3 +64,6 @@
 
 ;; don't use solaire-mode
 (package! solaire-mode :disable t)
+
+;; reject the priorities part of :lang org +pretty
+(package! org-fancy-priorities :disable t)
