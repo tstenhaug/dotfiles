@@ -55,10 +55,12 @@
 ;; work correctly.
 
 (package! graphviz-dot-mode)
-(package! lorem-ipsum)
-(package! jest)
-(package! pdfgrep
-  :recipe (:host github :repo "jeremy-compostella/pdfgrep"))
-(package! solaire-mode :disable t)
 (package! i3wm-config-mode
   :recipe (:host github :repo "Alexander-Miller/i3wm-Config-Mode"))
+(package! jest)
+(package! lorem-ipsum)
+(package! pdfgrep
+  :recipe (:host github :repo "jeremy-compostella/pdfgrep"))
+
+;; don't use solaire-mode
+(package! solaire-mode :disable t)
