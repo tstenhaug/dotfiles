@@ -101,16 +101,13 @@
   (ediff-files (concat doom-private-dir "init.el")
                (concat doom-emacs-dir "init.example.el")))
 
-; (define-key! help-map
-;   "di"   #'doom/ediff-init-and-example
-;   )
-
 ;; * Hydras
 
 ;; ** hydra-open
 
 (defhydra hydra-open (:color blue)
   "open"
+  ("c" (find-file "~/df/org/contacts.org"))
   ("d" (find-file "~/df/notes/diary.org.gpg"))
   ("f" (find-file "~/df/finance/finance.org"))
   ("h" (find-file "~/df/org/habits.org") "habits")
