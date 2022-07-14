@@ -342,42 +342,64 @@ If the file exists, load it and enable saving of abbrevs.")
      (smtpmail-smtp-service . 587)
      (smtpmail-stream-type . starttls)
      (mu4e-bookmarks .
-      ((:name "Unread messages" :query "flag:unread AND NOT flag:trashed" :key 117)
-        (:name "Today's messages" :query "date:today..now" :key 116)
-        (:name "Last 7 days" :query "date:7d..now" :hide-unread t :key 119)
-        (:name "Inbox" :query "/mbox/Inbox" :key ?i))))
+                     ((:name "Unread messages" :query "flag:unread AND NOT flag:trashed" :key 117)
+                      (:name "Today's messages" :query "date:today..now" :key 116)
+                      (:name "Last 7 days" :query "date:7d..now" :hide-unread t :key 119)
+                      (:name "Inbox" :query "/mbox/Inbox" :key ?i))))
    t))
 
-;; ** ol-* (org link)
-;; ** org-mode
-
-(use-package! ol-man
-  :after ol)
-
-;; This is the default setting -- Doom sets it to 0. Might like that, so I'm
-;; keeping this for posterity.
-;; (setq org-tags-column -77)
-
-;; unmap! doesn't work like I expect.
+(after! org-fancy-priorities
+  (remove-hook! org-mode 'org-fancy-priorities-mode)
+  (remove-hook! org-agenda-mode 'org-fancy-priorities-mode))
 
 ;; https://github.com/hlissner/doom-emacs/issues/814
 
+(defvar ke-org-contacts-file "~/df/org/contacts.org")
+
+(defvar ke-org-contacts-template
+  "* %(org-contacts-template-name)       :%\\2:contact:tagdef:
+:properties:
+:defines: %^{tag (leading alpha)}
+:email: %(org-contacts-template-email)
+:phone:
+:alias:
+:nickname:
+:address:
+:birthday:
+:end:"
+  "Contents of the org capture-template")
+
 (after! org
   (setq +org-capture-todo-file "~/df/org/tasks.org")
+  ;; per 2022-07-14 the external org capture facility doesn't work as desired
+  ;; when running under Wayland, because it tries to pass display parameter.
+  ;; This is a workaround, and hopefully will have an upstream fix in the
+  ;; future. This works when running under Wayland, and I suspect it's just fine
+  ;; under X as well.
+  (setq +org-capture-frame-parameters
+        `((name . "doom-capture")
+          (width . 70)
+          (height . 25)
+          (transient . t)))
+  (setq org-archive-subtree-add-inherited-tags t)
   (setq org-agenda-custom-commands
         '(("l" agenda*)
           ("d" "Today-todos" tags-todo "today")))
   (setq org-attach-id-dir "org-attach/")
   (when IS-LINUX
-    ;; ;; (push '("\\.pdf\\'" . "evince %s") org-file-apps)
-    (push '("\\.pdf\\'" . emacs) org-file-apps)
-    )
+    ;; (push '("\\.pdf\\'" . "evince %s") org-file-apps)
+    (push '("\\.pdf\\'" . emacs) org-file-apps))
   (setq org-capture-templates
-        `(("t" "Personal todo" entry
+        `(("c" "Contacts" entry
+           (file ,ke-org-contacts-file)
+           ,ke-org-contacts-template
+           :empty-lines 1)
+          ("t" "Personal todo" entry
            (file+headline +org-capture-todo-file "Inbox"))
           ("d" "Diary" entry
            (file+olp+datetree "~/df/notes/diary.org.gpg")
            "* %<%H:%M> %?" :prepend t)))
+  (setq org-contacts-files '("~/df/org/contacts.org"))
   (setq org-ditaa-jar-path "~/.emacs.d/.local/straight/repos/org-mode/contrib/scripts/ditaa.jar")
   (setq org-format-latex-options
         (plist-put org-format-latex-options :scale 1.2))
