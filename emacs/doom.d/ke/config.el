@@ -252,7 +252,8 @@ If the file exists, load it and enable saving of abbrevs.")
   :config
   (setq gnus-select-method '(nntp "news.gmane.io"))
   (map! :map gnus-summary-mode-map
-        :n "\\" #'gnus-summary-next-page))
+        :n "\\" #'gnus-summary-next-page
+        :n "<backspace>" #'gnus-summary-prev-page))
 
 ;; ** graphviz-dot-mode
 
