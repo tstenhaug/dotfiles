@@ -5,22 +5,22 @@
 // Configuration reference: https://github.com/Alexays/Waybar/wiki/Configuration
 //
 // =============================================================================
-
 // This was lifted from the Manjaro Sway at some point. ts2022-06-25
-
 {
     // -------------------------------------------------------------------------
     // Global configuration
     // -------------------------------------------------------------------------
-
     "layer": "top",
-
     // If height property would be not present, it'd be calculated dynamically
     "height": 30,
     "position": "top",
-
-    "modules-left": ["sway/workspaces"],
-    "modules-center": ["sway/mode"],
+    "modules-left": [
+        "sway/workspaces"
+    ],
+    "modules-center": [
+        "custom/nordvpn",
+        "sway/mode",
+    ],
     "modules-right": [
         // informational
         // "sway/language",
@@ -29,29 +29,23 @@
         "memory",
         "battery",
         "temperature",
-
         // connecting
         "network",
         "bluetooth",
-
         // media
-//        "custom/playerctl",
-//        "idle_inhibitor",
+        //        "custom/playerctl",
+        //        "idle_inhibitor",
         "pulseaudio",
-//        "backlight",
-
+        //        "backlight",
         // system
-//        "custom/sunset",
-//        "custom/pacman",
-
+        //        "custom/sunset",
+        //        "custom/pacman",
         "tray",
         "clock"
     ],
-
     // -------------------------------------------------------------------------
     // Modules
     // -------------------------------------------------------------------------
-
     "battery": {
         "interval": 30,
         "states": {
@@ -60,11 +54,17 @@
         },
         "format-charging": " {capacity}%",
         "format": "{icon} {capacity}%",
-        "format-icons": ["", "", "", "", "", ""],
+        "format-icons": [
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        ],
         "tooltip": true,
         "bat": "BAT0"
     },
-
     "clock": {
         "interval": 60,
         "format": "{:%e %b %Y %H:%M}",
@@ -72,7 +72,6 @@
         "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>",
         "on-click": "swaymsg exec \\$calendar"
     },
-
     "cpu": {
         "interval": 5,
         "format": "﬙ {usage}%",
@@ -82,7 +81,6 @@
         },
         "on-click": "swaymsg exec \\$term_float htop"
     },
-
     "memory": {
         "interval": 5,
         "format": " {}%",
@@ -92,7 +90,6 @@
         },
         "on-click": "swaymsg exec \\$term_float htop"
     },
-
     "network": {
         "interval": 5,
         "format-wifi": " ",
@@ -101,12 +98,10 @@
         "tooltip-format": "{ifname} ({essid}): {ipaddr}",
         "on-click": "swaymsg exec \\$term_float nmtui"
     },
-
     "sway/mode": {
         "format": "<span style=\"italic\">{}</span>",
         "tooltip": false
     },
-
     "idle_inhibitor": {
         "format": "{icon}",
         "format-icons": {
@@ -114,14 +109,16 @@
             "deactivated": "鈴"
         }
     },
-
     "backlight": {
         "format": "{icon} {percent}%",
-        "format-icons": ["", "", ""],
+        "format-icons": [
+            "",
+            "",
+            ""
+        ],
         "on-scroll-up": "light -A 1",
         "on-scroll-down": "light -U 1"
     },
-
     "pulseaudio": {
         "scroll-step": 5,
         "format": "{icon} {volume}%{format_source}",
@@ -164,7 +161,6 @@
         "on-click": "foot bluetoothctl",
         "tooltip-format": "{status}"
     },
-
     "custom/github": {
         "interval": 300,
         "tooltip": false,
@@ -175,7 +171,6 @@
         "on-click": "xdg-open https://github.com/notifications && sleep 30 && pkill -RTMIN+4 waybar",
         "signal": 4
     },
-
     "custom/playerctl": {
         "interval": "once",
         "tooltip": true,
@@ -192,7 +187,6 @@
         "on-scroll-down": "playerctl position 10-; pkill -RTMIN+5 waybar",
         "signal": 5
     },
-
     "custom/clipboard": {
         "format": "",
         "interval": "once",
@@ -204,5 +198,4 @@
         "exec-if": "[ -x \"$(command -v cliphist)\" ] && [ $(cliphist list | wc -l) -gt 0 ]",
         "signal": 9
     },
-
 }
