@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+
+# waybar/modules/nordvpn -- handler-script for a custom waybar module
+
+# nordvpn exec
+#   print a JSON object to stdout, suitable for the module's "exec"
+#
+# nordvpn toggle
+#   toggle the NordVPN connection, suitable for the module's "on-click"
+
+import json
+import subprocess
+import sys
+
+def get_status_output():
+    '''Return the decoded and trimmed output of "nordvpn status".'''
+    sp = subprocess.run(["nordvpn", "status"], capture_output=True)
+    ret = sp.stdout.decode('utf-8')
+    # there is some garbage-preamble in the status command, cut it off!
+    ret = ret[ret.find("Status"):]
+    return ret
+
+def is_vpn_connected(status_output):
+    '''Return True if NordVPN is connected, False otherwise.'''
+    return 'Status: Connected' in status_output
+
+def handle_exec_cmd(status_output):
+    '''Print JSON suitable for Waybar exec.'''
+    icon = '  ' if is_vpn_connected(status_output) else '  '
+    ret = {
+        'text': icon,
+        'tooltip': status_output,
+        # class: (which css styles to apply)
+    }
+    print(json.dumps(ret))
+
+def handle_toggle_cmd(status_output):
+    '''Toggle VPN connection.'''
+    if is_vpn_connected(status_output):
+        subprocess.run(['nordvpn', 'disconnect'])
+    else:
+        subprocess.run(['nordvpn', 'connect'])
+
+if __name__ == '__main__':
+    status_output = get_status_output()
+    cmd = sys.argv[1]
+    if cmd == 'exec':
+        handle_exec_cmd(status_output)
+    elif (cmd == 'toggle'):
+        handle_toggle_cmd(status_output)

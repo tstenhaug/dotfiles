@@ -148,6 +148,14 @@
          "spacing": 5
      },
 
+    "custom/nordvpn": {
+        "interval": 5,
+        "format": "VPN{}",
+        "on-click": "~/.config/waybar/modules/nordvpn toggle",
+        "exec": "~/.config/waybar/modules/nordvpn exec",
+        "return-type": "json",
+    },
+
     "custom/menu": {
         "format": "",
         "on-click": "swaymsg exec \\$menu",
