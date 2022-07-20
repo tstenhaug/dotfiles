@@ -50,6 +50,9 @@ input "type:pointer" {
 
 bar {
     swaybar_command waybar
+    hidden_state hide
+    mode hide
+    modifier Mod4
 }
 
 include /home/thomas/.config/sway/conf.d/*

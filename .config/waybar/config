@@ -10,9 +10,11 @@
     // -------------------------------------------------------------------------
     // Global configuration
     // -------------------------------------------------------------------------
-    "layer": "top",
+//    "layer": "top",
+    "bar_id": "bar-0",
+    "ipc": true,
     // If height property would be not present, it'd be calculated dynamically
-    "height": 30,
+    "height": 15,
     "position": "top",
     "modules-left": [
         "sway/workspaces"
