@@ -6,6 +6,8 @@
 # and GPG keys.
 if [ -d $XDG_RUNTIME_DIR/keyring ] ; then
     export $(gnome-keyring-daemon --start)
+    # attempt to make Emacs epg use gnome-keyring-daemon setup
+    export "GPG_AGENT_INFO=$(gpgconf --list-dirs agent-socket):0:1"
 else
 # otherwise, trust that ssh-agent will be available through other means
     export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
