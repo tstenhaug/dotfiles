@@ -288,24 +288,32 @@ If the file exists, load it and enable saving of abbrevs.")
 
 ;; ** lispyville
 
-
-(after! lispy ()
-  (map! :map lispy-mode-map
-        :i ";" #'self-insert-command))
-
 (after! lispyville
-  (lispyville-set-key-theme
-   '((operators normal) c-w
-     text-objects
-     (prettify insert)
-     (atom-movement normal visual)
-     slurp/barf-lispy
-     (wrap normal insert)
-     additional
-     additional-insert
-     additional-movement
-     (additional-wrap normal insert)
-     (escape insert))))
+  (map! :map lispy-mode-map-lispy
+        "[" nil
+        "]" nil))
+
+;; (after! lispy ()
+;;   (map! :map lispy-mode-map
+;;         :i ";" #'self-insert-command
+;;         "[" nil
+;;         "]" nil))
+
+;; (after! lispyville
+;;   (lispyville-set-key-theme
+;;    '((operators normal) c-w
+;;      text-objects
+;;      (prettify insert)
+;;      (atom-movement normal visual)
+;;      slurp/barf-lispy
+;;      (wrap normal insert)
+;;      additional
+;;      additional-insert
+;;      additional-movement
+;;      (additional-wrap normal insert)
+;;      (escape insert))))
+
+
 
 
 ;; ** lsp-mode
